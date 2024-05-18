@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import *
 
 # Register your models here.
-admin.site.register(TipoEmpleado)
-admin.site.register(Empleado)
-admin.site.register(Genero)
+admin.site.register(TipoLanzamiento)
+admin.site.register(Lanzamiento)
+admin.site.register(GeneroMusical)
+admin.site.register(Artista)

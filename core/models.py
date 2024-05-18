@@ -1,32 +1,45 @@
 from django.db import models
 
 # Create your models here.
-
-class Genero (models.Model):
-    descripcion = models.CharField(max_length=20)
-
-    def __str__(self):
-        return self.descripcion
-
-class TipoEmpleado(models.Model):
-    descripcion = models.CharField(max_length = 40)
     
+class TipoLanzamiento(models.Model):
+    TIPO_CHOICES = [
+        ('single', 'Single'),
+        ('album', 'Álbum'),
+        ('ep', 'EP'),
+    ]
 
-    def __str__(self):
-        return self.descripcion
+    nombreTipo = models.CharField(max_length=20, choices=TIPO_CHOICES)
 
-class Empleado(models.Model):
-    rut = models.CharField(max_length = 12)
-    nombre = models.CharField(max_length = 40)
-    apellido = models.CharField(max_length = 40)
-    edad = models.IntegerField(default = 0)
-    direccion = models.CharField(max_length = 60)
-    telefono = models.CharField(max_length = 20)
-    habilitado = models.BooleanField(default = True)
-    genero = models.ForeignKey(Genero, on_delete=models.CASCADE, default=1)
-    tipo = models.ForeignKey(TipoEmpleado, on_delete=models.CASCADE)
-    fecha_ingreso = models.DateTimeField(auto_now_add = True)
+    def str(self):
+        return dict(self.TIPO_CHOICES)[self.nombreTipo]
 
-    def __str__(self):
-        return self.nombre
+class Artista(models.Model):
+    nombreArtista = models.CharField(max_length=50)
+    fecha_nacimiento = models.DateField(null=True, blank=True)
+    biografia = models.TextField()
+    #imagen = models.ImageField(upload_to=upload_to_artista, null=True, blank=True)
+
+    def str(self):
+        return self.nombreArtista
     
+class GeneroMusical(models.Model):
+    nombreGenero = models.CharField(max_length=30)
+
+    def str(self):
+        return self.nombreGenero
+
+class Lanzamiento(models.Model):
+    tipoLanzamiento = models.ForeignKey(TipoLanzamiento, on_delete=models.CASCADE)
+    nombreLanzamiento = models.CharField(max_length=50)
+    artista = models.ForeignKey(Artista, on_delete=models.CASCADE)
+    fechaLanzamiento = models.DateField()
+    genero = models.ForeignKey(GeneroMusical, on_delete=models.CASCADE)
+    descripcionLanzamiento = models.TextField()
+    precio = models.IntegerField(default=0)
+
+    def str(self):
+        return self.nombreLanzamiento
+    
+    def precio_clp(self):
+        return "${:,.0f}".format(self.precio).replace(",", ".")

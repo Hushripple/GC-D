@@ -2,18 +2,22 @@ from django import forms
 from django.forms import ModelForm
 from .models import *
 
-class EmpleadoForm (ModelForm):
+class LanzamientoForm (ModelForm):
     class Meta:
-        model = Empleado
-        # fields = ['rut', 'nombre', 'apellido']
+        model = TipoLanzamiento
         fields = '__all__'
 
-class TipoEmpleadoForm (ModelForm):
+class TipoLanzamientoForm (ModelForm):
     class Meta:
-        model = TipoEmpleado
+        model = TipoLanzamiento
         fields = '__all__'
 
-class Genero(ModelForm):
+class GeneroMusicalForm(ModelForm):
     class Meta:
-        model = Genero
+        model = GeneroMusical
+        fields = '__all__'
+
+class ArtistaForm (ModelForm):
+    class Meta:
+        model = Artista
         fields = '__all__'

@@ -7,59 +7,212 @@ from django.contrib.auth.decorators import login_required, permission_required
 def index (request):
     return render(request, 'core/index.html')
 
-def contacto (request):
-    return render(request, 'core/contacto.html')
+def artistas (request):
+    return render(request, 'core/artistas.html')
 
-def shop (request):
-    return render(request, 'core/shop.html')
+def lanzamientos (request):
+    return render(request, 'core/lanzamientos.html')
 
-@permission_required('core.view_empleado')
-def empleados(request):
-    empleados = Empleado.objects.all()
+def loginmiembros (request):
+    return render(request, 'core/miembros/loginMiembros.html')
+
+def miembrosindex(request):
+    return render(request, 'core/miembros/miembrosIndex.html')
+
+
+# TIPO LANZAMIENTOS
+
+def tipolanzamientosobjects(request):
+    tipolanzamientos = TipoLanzamiento.objects.all()
     aux = {
-        'lista' : empleados
+        'lista' : tipolanzamientos
     }
 
-    return render(request,'core/empleados/index.html', aux)
+    return render(request,'core/miembros/miembrosIndex.html', aux)
 
-@permission_required('core.add_empleado')
-def empleadosadd(request):
+def tipolanzamientosadd(request):
     aux = {
-        'form'  : EmpleadoForm()
-    }
-
-    if request.method == 'POST':
-        formulario = EmpleadoForm(request.POST)
-        if formulario.is_valid():
-            formulario.save()
-            aux['msj'] = "¡Empleado guardado correctamente!"
-        else:
-            aux['form'] = formulario
-            aux['msj'] = "¡Error al guardar empleado!"
-
-    return render(request, 'core/empleados/crud/add.html', aux)
-
-@permission_required('core.change_empleado')
-def empleadosupdate(request, id):
-    empleado = Empleado.objects.get(id=id)
-    aux = {
-        'form'  : EmpleadoForm(instance=empleado)
+        'form'  : TipoLanzamientoForm()
     }
 
     if request.method == 'POST':
-        formulario = EmpleadoForm(request.POST, instance=empleado)
+        formulario = TipoLanzamiento(request.POST)
         if formulario.is_valid():
             formulario.save()
-            aux['msj'] = "¡Empleado actualizado correctamente!"
+            aux['msj'] = "¡Tipo de lanzamiento guardado correctamente!"
         else:
             aux['form'] = formulario
-            aux['msj'] = "¡Error al actualizar empleado!"
+            aux['msj'] = "¡Error al guardar tipo de lanzamiento!"
 
-    return render(request, 'core/empleados/crud/update.html', aux)
+    return render(request, 'core/miembros/tipoLanzamientos/crud/add.html', aux)
 
-@permission_required('core.delete_empleado')
-def empleadosdelete(request, id):
-    empleado = Empleado.objects.get(id=id)
-    empleado.delete()
+def tipolanzamientosupdate(request, id):
+    tipolanzamientos = TipoLanzamiento.objects.get(id=id)
+    aux = {
+        'form'  : TipoLanzamientoForm(instance=tipolanzamientos)
+    }
 
-    return redirect(to = "empleados")
+    if request.method == 'POST':
+        formulario = TipoLanzamientoForm(request.POST, instance=tipolanzamientos)
+        if formulario.is_valid():
+            formulario.save()
+            aux['msj'] = "¡Tipo de lanzamiento actualizado correctamente!"
+        else:
+            aux['form'] = formulario
+            aux['msj'] = "¡Error al actualizar tipo de lanzamiento!"
+
+    return render(request, 'core/miembros/tipoLanzamientos/crud/update.html', aux)
+
+def tipolanzamientosdelete(id):
+    tipolanzamientos = TipoLanzamiento.objects.get(id=id)
+    tipolanzamientos.delete()
+
+    return redirect(to = 'core/miembros/miembrosIndex.html')
+
+
+# LANZAMIENTOS
+
+def lanzamientosobjects(request):
+    lanzamientos = Lanzamiento.objects.all()
+    aux = {
+        'lista' : lanzamientos
+    }
+
+    return render(request,'core/miembros/miembrosIndex.html', aux)
+
+def lanzamientosadd(request):
+    aux = {
+        'form'  : LanzamientoForm()
+    }
+
+    if request.method == 'POST':
+        formulario = Lanzamiento(request.POST)
+        if formulario.is_valid():
+            formulario.save()
+            aux['msj'] = "¡Lanzamiento guardado correctamente!"
+        else:
+            aux['form'] = formulario
+            aux['msj'] = "¡Error al guardar lanzamiento!"
+
+    return render(request, 'core/miembros/lanzamientos/crud/add.html', aux)
+
+def lanzamientosupdate(request, id):
+    lanzamientos = Lanzamiento.objects.get(id=id)
+    aux = {
+        'form'  : LanzamientoForm(instance=lanzamientos)
+    }
+
+    if request.method == 'POST':
+        formulario = LanzamientoForm(request.POST, instance=lanzamientos)
+        if formulario.is_valid():
+            formulario.save()
+            aux['msj'] = "¡Lanzamiento actualizado correctamente!"
+        else:
+            aux['form'] = formulario
+            aux['msj'] = "¡Error al actualizar lanzamiento!"
+
+    return render(request, 'core/miembros/lanzamientos/crud/update.html', aux)
+
+def lanzamientosdelete(id):
+    lanzamientos = Lanzamiento.objects.get(id=id)
+    lanzamientos.delete()
+
+    return redirect(to = "core/miembros/miembrosIndex.html")
+
+
+# ARTISTAS
+
+def artistasobjects(request):
+    artistas = Artista.objects.all()
+    aux = {
+        'lista' : artistas
+    }
+
+    return render(request, 'core/miembros/miembrosIndex.html', aux)
+
+def artistasadd(request):
+    aux = {
+        'form' : ArtistaForm()
+    }
+
+    if request.method == 'POST':
+        formulario = Artista(request.POST)
+        if formulario.is_valid():
+            formulario.save()
+            aux['msj'] = "¡Artista guardado correctamente!"
+        else:
+            aux['form'] = formulario
+            aux['msj'] = "¡Error al guardar artista!"
+
+    return render(request, 'core/miembros/artistas/crud/add.html', aux)
+
+def artistasupdate(request, id):
+    artistas = Artista.objects.get(id=id)
+    aux = {
+        'form' : ArtistaForm(instance=artistas)
+    }
+
+    if request.method == 'POST':
+        formulario = ArtistaForm(request.POST, instance=artistas)
+        if formulario.is_valid():
+            formulario.save()
+            aux['msj'] = "¡Artista actualizado correctamente!"
+        else:
+            aux['form'] = formulario
+            aux['msj'] = "¡Error al actualizar artista!"
+
+    return render(request, 'core/miembros/artistas/crud/update.html', aux)
+
+def artistasdelete(id):
+    artistas = Artista.objects.get(id=id)
+    artistas.delete()
+
+    return redirect(to = "core/miembros/miembrosIndex.html")
+
+# GÉNERO MUSICAL
+
+def generosobjects(request):
+    generos = GeneroMusical.objects.all()
+    aux = {
+        'lista' : generos
+    }
+
+    return render(request, 'core/miembros/miembrosIndex.html', aux)
+
+def generosadd(request):
+    aux = {
+        'form' : GeneroMusicalForm()
+    }
+
+    if request.method == 'POST':
+        formulario = GeneroMusical(request.POST)
+        if formulario.is_valid():
+            formulario.save()
+            aux['msj'] = "¡Género musical guardado correctamente!"
+        else:
+            aux['form'] = formulario
+            aux['msj'] = "¡Error al guardar el género musical!"
+
+    return render(request, 'core/miembros/generos/crud/add.html', aux)
+
+def generosupdate(request, id):
+    generos = GeneroMusical.objects.get(id=id)
+    aux = {
+        'form' : GeneroMusicalForm(instance=generos)
+    }
+
+    if request.method == 'POST':
+        formulario = GeneroMusicalForm(request.POST, instance=generos)
+        if formulario.is_valid():
+            formulario.save()
+        else:
+            aux['form'] = formulario
+            aux['msj'] = "Error al actualizar el género musical!"
+
+    return render(request, 'core/miembros/generos/crud/update.html', aux)
+
+def generosdelete(id):
+    generos = GeneroMusical.objects.get(id=id)
+    generos.delete()
+
+    return redirect(to = "core/miembros/miembrosIndex.html")

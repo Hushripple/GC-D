@@ -2,11 +2,9 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
-    path('', index, name="index"), 
-    path('shop/', shop, name="shop"),
-    path('contacto/', contacto, name="contacto"),
-    path('empleados/', empleados, name="empleados"),
-    path('empleados/add/', empleadosadd, name="empleadosadd"),
-    path('empleados/update/<id>/', empleadosupdate, name="empleadosupdate"),
-    path('empleados/delete/<id>/', empleadosdelete, name="empleadosdelete"),
+    path('', index, name="index"),
+    path('artistas/', artistas, name="artistas"), 
+    path('lanzamientos', lanzamientos, name="lanzamientos"), 
+    path('loginmiembros', loginmiembros, name="loginmiembros"),
+    path('miembrosindex', miembrosindex, name="miembrosindex"), 
 ]
