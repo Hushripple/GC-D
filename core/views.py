@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from .models import *
 from .forms import *
 from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
 def index (request):
@@ -19,6 +21,35 @@ def loginmiembros (request):
 def miembrosindex(request):
     return render(request, 'core/miembros/miembrosIndex.html')
 
+# LOGIN 
+
+def logincliente(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        
+        
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            # Verificar si el usuario es un cliente
+            if user.groups.filter(name='clientes').exists():
+                # Si el usuario es un cliente, iniciar sesión
+                login(request, user)
+                return redirect('index')  # Redirigir a la página del cliente
+            elif user.groups.filter(name='miembros').exists():
+                messages.error(request, 'Solo los clientes pueden iniciar sesión en este sitio.')
+                return redirect('index')
+        else:
+            # Si las credenciales son incorrectas, mostrar un mensaje de error
+            messages.error(request, 'Credenciales de inicio de sesión incorrectas.')
+            return redirect('index')
+
+    return render(request, 'index')  # Renderiza la plantilla de inicio con el modal
+
+def logout_view(request):
+    logout(request)
+    return redirect('index')  # Redirige a la página de inicio u otra página después de cerrar sesión
 
 # TIPO LANZAMIENTOS
 

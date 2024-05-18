@@ -11,6 +11,9 @@ class TipoLanzamientoForm (ModelForm):
     class Meta:
         model = TipoLanzamiento
         fields = '__all__'
+        widgets = {
+            'nombreTipo': forms.Select(attrs={'class': 'form-select'})
+                }
 
 class GeneroMusicalForm(ModelForm):
     class Meta:

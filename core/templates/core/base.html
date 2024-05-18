@@ -20,15 +20,27 @@
       </a>
     </div>
     <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#registroModal">Registro</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'loginmiembros' %}">Miembro</a>
-      </li>
+      {% if not user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link text-center" href="#">Bienvenido, Invitado</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#registroModal">Registro</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'loginmiembros' %}">Miembro</a>
+        </li>        
+      {% else %}
+        <li class="nav-item">
+          <a class="nav-link text-center" href="#">Bienvenido, {{ user.username }}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'logout' %}">Cerrar sesión</a>
+        </li>
+      {% endif %}
     </ul>
   </div>
   <form class="d-flex">
@@ -74,24 +86,36 @@
         <h5 class="modal-title" id="loginModalLabel" style="color: black;">Iniciar sesión</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <!-- Formulario de inicio de sesión -->
+      <<!-- Formulario de inicio de sesión -->
       <div class="modal-body">
-        <form action="#">
+        <form action="{% url 'login' %}" method="POST">
+          {% csrf_token %}
           <div class="mb-3">
-            <label for="emailLogin" class="form-label" style="color: black;">Email</label>
-            <input type="email" class="form-control" id="txtEmail" required>
+            <label for="username" class="form-label" style="color: black;">Username</label>
+            <input type="text" class="form-control" id="username" name="username" required>
           </div>
           <div class="mb-3">
-            <label for="passwordLogin" class="form-label" style="color: black;">Contraseña</label>
-            <input type="password" class="form-control" id="txtPassword" required>
+            <label for="password" class="form-label" style="color: black;">Contraseña</label>
+            <input type="password" class="form-control" id="password" name="password" required>
           </div>
-          <!-- href a indexlogin.html -->
           <button type="submit" class="btn btn-dark" style="color: white;">Iniciar sesión</button>
         </form>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Mensajes de error -->
+{% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert alert-danger" role="alert">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
 <!-- Fin modals para registro e inicio de sesión -->
 
 <!-- Inicio carrusel -->
