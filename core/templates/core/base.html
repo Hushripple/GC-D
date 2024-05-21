@@ -59,23 +59,29 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <!-- Formulario de registro -->
-      <div class="modal-body">
-        <form>
-          <div class="mb-3">
-            <label for="emailRegistro" class="form-label" style="color:black">Email</label>
-            <input type="email" class="form-control" id="txtEmail" required>
-          </div>
-          <div class="mb-3">
-            <label for="nombreRegistro" class="form-label" style="color:black">Usuario</label>
-            <input type="text" class="form-control" id="txtUsuario" required>
-          </div>
-          <div class="mb-3">
-            <label for="passwordRegistro" class="form-label" style="color:black">Contraseña</label>
-            <input type="password" class="form-control" id="txtPassword" required>
-          </div>
-          <button type="submit" class="btn btn-dark">Registrarse</button>
-        </form>
-      </div>
+        <div class="modal-body">
+          <form method="POST" action="{% url 'registercliente' %}">
+              {% csrf_token %}
+              <div class="mb-3">
+                  <label for="emailRegistro" class="form-label" style="color:black">Email</label>
+                  <input type="email" class="form-control" id="txtEmail" name="email" placeholder="Introduce un email" required>
+              </div>
+              <div class="mb-3">
+                  <label for="nombreRegistro" class="form-label" style="color:black">Nombre de usuario</label>
+                  <input type="text" class="form-control" id="txtUsuario" name="username" placeholder="Introduce un nombre de usuario" required>
+              </div>
+              <div class="mb-3">
+                  <label for="passwordRegistro" class="form-label" style="color:black">Contraseña</label>
+                  <input type="password" class="form-control" id="txtPassword" name="password" placeholder="Introduce una contraseña" required>
+              </div>
+              <div class="mb-3">
+                  <label for="passwordRepetirRegistro" class="form-label" style="color:black">Confirmar contraseña</label>
+                  <input type="password" class="form-control" id="txtPasswordConfirmation" name="password_confirmation" placeholder="Vuelva a introducir contraseña" required>
+              </div>
+              <button type="submit" class="btn btn-dark">Registrarse</button>
+          </form>
+        </div>
+      <!-- Fin formulario registro -->
     </div>
   </div>
 </div>
@@ -86,17 +92,17 @@
         <h5 class="modal-title" id="loginModalLabel" style="color: black;">Iniciar sesión</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <<!-- Formulario de inicio de sesión -->
+      <!-- Formulario de inicio de sesión -->
       <div class="modal-body">
         <form action="{% url 'login' %}" method="POST">
           {% csrf_token %}
           <div class="mb-3">
-            <label for="username" class="form-label" style="color: black;">Username</label>
-            <input type="text" class="form-control" id="username" name="username" required>
+            <label for="username" class="form-label" style="color: black;">Nombre de usuario</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="Introduce tu usuario" required>
           </div>
           <div class="mb-3">
             <label for="password" class="form-label" style="color: black;">Contraseña</label>
-            <input type="password" class="form-control" id="password" name="password" required>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Introduce tu contraseña" required>
           </div>
           <button type="submit" class="btn btn-dark" style="color: white;">Iniciar sesión</button>
         </form>
@@ -105,13 +111,19 @@
   </div>
 </div>
 
-<!-- Mensajes de error -->
+<!-- Mensajes -->
 {% if messages %}
   <div class="container mt-3">
     {% for message in messages %}
-      <div class="alert alert-danger" role="alert">
-        {{ message }}
-      </div>
+      {% if message.tags == 'success' %}
+        <div class="alert alert-success" role="alert">
+          {{ message }}
+        </div>
+      {% else %}
+        <div class="alert alert-danger" role="alert">
+          {{ message }}
+        </div>
+      {% endif %}
     {% endfor %}
   </div>
 {% endif %}

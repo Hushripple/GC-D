@@ -9,4 +9,6 @@ urlpatterns = [
     path('miembrosindex/', miembrosindex, name="miembrosindex"),
     path('login/', logincliente, name='login'),
     path('logout/', logout_view, name='logout'),
+    path('register/', registercliente, name='registercliente'),
+    path('loginmiembro/', loginmiembro, name='loginmiembro'),
 ]

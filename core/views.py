@@ -4,6 +4,7 @@ from .forms import *
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User, Group
 
 # Create your views here.
 def index (request):
@@ -50,6 +51,64 @@ def logincliente(request):
 def logout_view(request):
     logout(request)
     return redirect('index')  # Redirige a la página de inicio u otra página después de cerrar sesión
+
+def loginmiembro(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        
+        
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            # Verificar si el usuario es un miembro
+            if user.groups.filter(name='miembros').exists():
+                # Si el usuario es un cliente, iniciar sesión
+                login(request, user)
+                return redirect('miembrosindex')  # Redirigir a la página del cliente
+            elif user.groups.filter(name='clientes').exists():
+                messages.error(request, 'Solo los miembros pueden iniciar sesión en este sitio.')
+                return redirect('loginmiembros')
+        else:
+            # Si las credenciales son incorrectas, mostrar un mensaje de error
+            messages.error(request, 'Credenciales de inicio de sesión incorrectas.')
+            return redirect('loginmiembros')
+
+    return render(request, 'loginmiembros')  # Renderiza la plantilla de inicio con el modal
+
+# REGISTRO
+
+def registercliente(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        email = request.POST['email']
+        password1 = request.POST['password']
+        password2 = request.POST['password_confirmation']
+
+        if password1 != password2:
+            messages.error(request, 'Las contraseñas no coinciden.')
+            return redirect('index')
+        elif len(password1) < 8:
+            messages.error(request, 'La contraseña debe tener al menos 8 caracteres.')
+            return redirect('index')
+        elif len(username) < 3:
+            messages.error(request, 'El nombre de usuario debe tener al menos 3 caracteres.')
+            return redirect('index')
+        elif User.objects.filter(username=username).exists():
+            messages.error(request, 'El nombre de usuario ya está en uso.')
+            return redirect('index')
+        elif User.objects.filter(email=email).exists():
+            messages.error(request, 'El correo electrónico ya está en uso.')
+            return redirect('index')
+        else:
+            user = User.objects.create_user(username=username, email=email, password=password1)
+            cliente_group = Group.objects.get(name='clientes')
+            user.groups.add(cliente_group)
+            user.save()
+            messages.success(request, 'Usuario creado correctamente')
+            return redirect('index')
+
+    return render(request, 'index')
 
 # TIPO LANZAMIENTOS
 
