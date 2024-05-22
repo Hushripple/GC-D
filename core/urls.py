@@ -11,4 +11,7 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('register/', registercliente, name='registercliente'),
     path('loginmiembro/', loginmiembro, name='loginmiembro'),
+    path('addtipolanzamientos/', addtipolanzamientos, name='addtipolanzamientos'),
+    path('generosobjects/', generosobjects, name='generosobjects'),
+    path('generosadd/', generosadd, name='generosadd'),
 ]

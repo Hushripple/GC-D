@@ -11,8 +11,12 @@ class TipoLanzamiento(models.Model):
 
     nombreTipo = models.CharField(max_length=20, choices=TIPO_CHOICES)
 
-    def str(self):
+    def __str__(self):
         return dict(self.TIPO_CHOICES)[self.nombreTipo]
+    
+    class Meta:
+        verbose_name = "Tipo de lanzamiento"
+        verbose_name_plural = "Tipos de lanzamiento"
 
 class Artista(models.Model):
     nombreArtista = models.CharField(max_length=50)
@@ -20,14 +24,22 @@ class Artista(models.Model):
     biografia = models.TextField()
     #imagen = models.ImageField(upload_to=upload_to_artista, null=True, blank=True)
 
-    def str(self):
+    def __str__(self):
         return self.nombreArtista
+    
+    class Meta:
+        verbose_name = "Artista"
+        verbose_name_plural = "Artistas"
     
 class GeneroMusical(models.Model):
     nombreGenero = models.CharField(max_length=30)
 
-    def str(self):
+    def __str__(self):
         return self.nombreGenero
+    
+    class Meta:
+        verbose_name = "Género Musical"
+        verbose_name_plural = "Géneros Musicales"
 
 class Lanzamiento(models.Model):
     tipoLanzamiento = models.ForeignKey(TipoLanzamiento, on_delete=models.CASCADE)
@@ -38,8 +50,12 @@ class Lanzamiento(models.Model):
     descripcionLanzamiento = models.TextField()
     precio = models.IntegerField(default=0)
 
-    def str(self):
+    def __str__(self):
         return self.nombreLanzamiento
     
     def precio_clp(self):
         return "${:,.0f}".format(self.precio).replace(",", ".")
+    
+    class Meta:
+        verbose_name = "Lanzamiento"
+        verbose_name_plural = "Lanzamientos"

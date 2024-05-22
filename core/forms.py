@@ -10,7 +10,7 @@ class LanzamientoForm (ModelForm):
     class Meta:
         model = TipoLanzamiento
         fields = '__all__'
-
+        
 class TipoLanzamientoForm (ModelForm):
     class Meta:
         model = TipoLanzamiento

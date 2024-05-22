@@ -22,6 +22,12 @@ def loginmiembros (request):
 def miembrosindex(request):
     return render(request, 'core/miembros/miembrosIndex.html')
 
+def addtipolanzamientos (request):
+    return render(request, 'core/miembros/tipoLanzamientos/crud/add.html')
+
+def addgeneros (request):
+    return render(request, 'core/miembros/generos/crud/add.html')
+
 # LOGIN 
 
 def logincliente(request):
@@ -262,20 +268,19 @@ def artistasdelete(id):
 # GÉNERO MUSICAL
 
 def generosobjects(request):
-    generos = GeneroMusical.objects.all()
-    aux = {
-        'lista' : generos
+    auxGenObj = {
+        'listaGenObj' : GeneroMusical.objects.all()
     }
 
-    return render(request, 'core/miembros/miembrosIndex.html', aux)
+    return render(request, 'core/miembros/generos/generosobjects.html', auxGenObj)
 
 def generosadd(request):
     aux = {
-        'form' : GeneroMusicalForm()
+        'form': GeneroMusicalForm()
     }
 
     if request.method == 'POST':
-        formulario = GeneroMusical(request.POST)
+        formulario = GeneroMusicalForm(request.POST)
         if formulario.is_valid():
             formulario.save()
             aux['msj'] = "¡Género musical guardado correctamente!"
