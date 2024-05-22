@@ -14,4 +14,5 @@ urlpatterns = [
     path('addtipolanzamientos/', addtipolanzamientos, name='addtipolanzamientos'),
     path('generosobjects/', generosobjects, name='generosobjects'),
     path('generosadd/', generosadd, name='generosadd'),
+    path('generosdelete/<int:id>/', generosdelete, name='generosdelete'),
 ]

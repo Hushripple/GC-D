@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, Group
+from django.urls import reverse
 
 # Create your views here.
 def index (request):
@@ -306,8 +307,7 @@ def generosupdate(request, id):
 
     return render(request, 'core/miembros/generos/crud/update.html', aux)
 
-def generosdelete(id):
-    generos = GeneroMusical.objects.get(id=id)
-    generos.delete()
-
-    return redirect(to = "core/miembros/miembrosIndex.html")
+def generosdelete(request, id):
+    genero = GeneroMusical.objects.get(id=id)
+    genero.delete()
+    return redirect(reverse('generosobjects'))
