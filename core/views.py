@@ -292,22 +292,20 @@ def generosadd(request):
     return render(request, 'core/miembros/generos/crud/add.html', aux)
 
 def generosupdate(request, id):
-    generos = GeneroMusical.objects.get(id=id)
-    aux = {
-        'form' : GeneroMusicalForm(instance=generos)
-    }
+    genero = GeneroMusical.objects.get(id=id)
 
     if request.method == 'POST':
-        formulario = GeneroMusicalForm(request.POST, instance=generos)
+        formulario = GeneroMusicalForm(data=request.POST, instance=genero)
         if formulario.is_valid():
             formulario.save()
-        else:
-            aux['form'] = formulario
-            aux['msj'] = "Error al actualizar el género musical!"
+            return redirect('generosobjects')  # Redirige a la página de géneros después de la edición
+    else:
+        formulario = GeneroMusicalForm(instance=genero)
 
-    return render(request, 'core/miembros/generos/crud/update.html', aux)
+    return render(request, 'core/miembros/generos/crud/update.html', {'form': formulario, 'genero': genero})
 
 def generosdelete(request, id):
     genero = GeneroMusical.objects.get(id=id)
     genero.delete()
+    
     return redirect(reverse('generosobjects'))

@@ -58,8 +58,30 @@
                         <td>{{ auxGenObj.pk }}</td>
                         <td>{{ auxGenObj.nombreGenero }}</td>
                         <td>
-                            <a href="#" class="btn btn-dark me-2">Modificar</a>
-                            <a class="btn btn-dark" onclick="confirmarDelete('{{ auxGenObj.pk }}')">Eliminar</a>
+                            <a href="{% url 'generosupdate' auxGenObj.pk %}" class="btn btn-dark me-2">Modificar</a>
+                            <!-- Botón para abrir el modal -->
+                            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#confirmModal{{ auxGenObj.pk }}">
+                                Eliminar
+                            </button>
+
+                            <!-- Modal de confirmación -->
+                            <div class="modal fade" id="confirmModal{{ auxGenObj.pk }}" tabindex="-1" aria-labelledby="confirmModalLabel{{ auxGenObj.pk }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="confirmModalLabel{{ auxGenObj.pk }}"><p class="text-dark">Confirmar eliminación</p></h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="text-dark">¿Está seguro que desea eliminar este género?</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancelar</button>
+                                            <a href="{% url 'generosdelete' auxGenObj.pk %}" class="btn btn-dark">Aceptar</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}
