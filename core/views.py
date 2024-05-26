@@ -9,15 +9,8 @@ from django.urls import reverse
 
 # Create your views here.
 def index (request):
-    auxArtObj = {
-        'listaArtObj' : Artista.objects.all()
-    }
-
-    auxLanzObj = {
-        'listaLanzObj' : Lanzamiento.objects.all()
-    }
     
-    return render(request, 'core/index.html', auxLanzObj, auxLanzObj)
+    return render(request, 'core/index.html')
 
 def artistas (request):
     auxArtObj = {
