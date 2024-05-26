@@ -61,12 +61,12 @@
                 <div class="card card-dark shadow-lg" style="border-radius: 1rem;">
                     <div class="card-body text-center">
                         <div class="mb-4">
-                            <form action="{% url 'loginmiembro' %}" method="POST">
+                            <form action="{% url 'loginadmin' %}" method="POST">
                                 {% csrf_token %}
                                 <div class="mb-3">
-                                    <h3 class="text-dark mb-4 fw-bold">Login miembros</h3>
-                                    <label for="email" class="form-label">Correo electrónico</label>
-                                    <input type="email" class="form-control" id="email" name="email" placeholder="Introduce tu correo" required>
+                                    <h3 class="text-dark mb-4 fw-bold">Login admins</h3>
+                                    <label for="username" class="form-label">Nombre de usuario</label>
+                                    <input type="text" class="form-control" id="username" name="username" placeholder="Introduce tu usuario" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="password" class="form-label">Contraseña</label>

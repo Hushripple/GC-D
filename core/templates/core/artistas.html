@@ -12,7 +12,7 @@
 <body>
 
 <!-- Inicio menú con logo -->
-<nav class="navbar navbar-expand-sm bg-primary navbar-light justify-content-center">
+<nav class="navbar navbar-expand-sm bg-light navbar-light justify-content-center">
   <div class="container-fluid">
     <div class="container-fluid">
       <a class="navbar-brand" href="{% url 'index' %}">
@@ -20,15 +20,30 @@
       </a>
     </div>
     <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#registroModal">Registro</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="LOGIN DE MIEMBRO" >Miembro</a>
-      </li>
+      {% if not user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link text-center" href="#">Bienvenido, Invitado</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#registroModal">Registro</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'loginmiembros' %}">Miembro</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'loginadmins' %}">Admin</a>
+        </li>          
+      {% else %}
+        <li class="nav-item">
+          <a class="nav-link text-center" href="#">Bienvenido, {{ user.username }}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'logout' %}">Cerrar sesión</a>
+        </li>
+      {% endif %}
     </ul>
   </div>
   <form class="d-flex">
@@ -43,27 +58,33 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title text-black" id="registroModalLabel">Registro</h5>
+        <h5 class="modal-title" id="registroModalLabel" style="color:black">Registro</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <!-- Formulario de registro -->
-      <div class="modal-body">
-        <form>
-          <div class="mb-3">
-            <label for="emailRegistro " class="form-label text-black">Email</label>
-            <input type="email" class="form-control" id="txtEmail" required>
-          </div>
-          <div class="mb-3">
-            <label for="nombreRegistro " class="form-label text-black">Usuario</label>
-            <input type="text" class="form-control" id="txtUsuario" required>
-          </div>
-          <div class="mb-3">
-            <label for="passwordRegistro " class="form-label text-black">Contraseña</label>
-            <input type="password" class="form-control" id="txtPassword" required>
-          </div>
-          <button type="submit" class="btn btn-dark">Registrarse</button>
-        </form>
-      </div>
+        <div class="modal-body">
+          <form method="POST" action="{% url 'registercliente' %}">
+              {% csrf_token %}
+              <div class="mb-3">
+                  <label for="emailRegistro" class="form-label" style="color:black">Email</label>
+                  <input type="email" class="form-control" id="txtEmail" name="email" placeholder="Introduce un email" required>
+              </div>
+              <div class="mb-3">
+                  <label for="nombreRegistro" class="form-label" style="color:black">Nombre de usuario</label>
+                  <input type="text" class="form-control" id="txtUsuario" name="username" placeholder="Introduce un nombre de usuario" required>
+              </div>
+              <div class="mb-3">
+                  <label for="passwordRegistro" class="form-label" style="color:black">Contraseña</label>
+                  <input type="password" class="form-control" id="txtPassword" name="password" placeholder="Introduce una contraseña" required>
+              </div>
+              <div class="mb-3">
+                  <label for="passwordRepetirRegistro" class="form-label" style="color:black">Confirmar contraseña</label>
+                  <input type="password" class="form-control" id="txtPasswordConfirmation" name="password_confirmation" placeholder="Vuelva a introducir contraseña" required>
+              </div>
+              <button type="submit" class="btn btn-dark">Registrarse</button>
+          </form>
+        </div>
+      <!-- Fin formulario registro -->
     </div>
   </div>
 </div>
@@ -71,27 +92,45 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title text-black" id="loginModalLabel " >Iniciar sesión</h5>
+        <h5 class="modal-title" id="loginModalLabel" style="color: black;">Iniciar sesión</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <!-- Formulario de inicio de sesión -->
       <div class="modal-body">
-        <form action="loginartistas.html">
+        <form action="{% url 'login' %}" method="POST">
+          {% csrf_token %}
           <div class="mb-3">
-            <label for="emailLogin" class="form-label text-black">Email</label>
-            <input type="email" class="form-control" id="txtEmail" required>
+            <label for="username" class="form-label" style="color: black;">Nombre de usuario</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="Introduce tu usuario" required>
           </div>
           <div class="mb-3">
-            <label for="passwordLogin" class="form-label text-black">Contraseña</label>
-            <input type="password" class="form-control" id="txtPassword" required>
+            <label for="password" class="form-label" style="color: black;">Contraseña</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Introduce tu contraseña" required>
           </div>
-          <!-- href a indexlogin.html -->
-          <button type="submit" class="btn btn-dark">Iniciar sesión</button>
+          <button type="submit" class="btn btn-dark" style="color: white;">Iniciar sesión</button>
         </form>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Mensajes -->
+{% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      {% if message.tags == 'success' %}
+        <div class="alert alert-success" role="alert">
+          {{ message }}
+        </div>
+      {% else %}
+        <div class="alert alert-danger" role="alert">
+          {{ message }}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endif %}
+
 <!-- Fin modals para registro e inicio de sesión -->
 
 <!-- container de las cartas -->
@@ -115,742 +154,40 @@
     <h2 class="text-center my-4" style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;"><strong>ARTISTAS</strong></h2>
     <div class=" text-center pt-0 pb-5">
     </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-12 align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/agoraphobicNosebleed.jpg' %}" alt="agoraphobic-Nosebleed" style="max-width: 130px; max-height: 130px;" data-bs-toggle="modal" data-bs-target="#myModal01">
-        <div class="card-body text-center">
-          <h4>Agoraphobic Nosebleed</h4>
-        </div> 
-      </div>
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/ArseDestroyer.jpeg' %}" alt="Arse-Destroyer" style="max-width: 130px; max-height: 130px;" data-bs-toggle="modal" data-bs-target="#myModal02">
-        <div class="card-body text-center">
-          <h4>Arse Destroyer</h4>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/Asap-rocky.jpg' %}" alt="Asap-rocky" style="max-width: 130px; max-height: 130px;" data-bs-toggle="modal" data-bs-target="#myModal03">
-        <div class="card-body text-center">
-          <h4>A$AP Rocky</h4>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/Assuck.jpg' %}" alt="Assuck-Band" style="max-width: 130px; max-height: 330px;" data-bs-toggle="modal" data-bs-target="#myModal04">
-        <div class="card-body text-center">
-          <h4>Assück</h4>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-2 col-sm-12">
-        <div class="card h-100 border-0 mx-auto align-items-center mb-5 ">
-          <img class="card-img-top" src="{% static 'core/img/Babykeem.jpeg' %}" alt="Baby-keem" style="max-width: 130px; max-height: 130px;" data-bs-toggle="modal" data-bs-target="#myModal05">
+    {% for auxArtObj in listaArtObj %}
+      <div class="col-md-2 col-sm-12">
+        <div class="card h-100 border-0 mx-12 align-items-center mb-5">
+          {% if auxArtObj.imagen %}
+            <!-- Aquí agregamos un botón con el data-bs-toggle y data-bs-target para abrir el modal -->
+            <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#modal{{ auxArtObj.id }}">
+              <img class="card-img-top" src="{{ auxArtObj.imagen.url }}" alt="imagenArtista" style="max-width: 130px; max-height: 130px;">
+            </button>
+          {% endif %}
           <div class="card-body text-center">
-            <h4>Baby keem</h4>
+            <h4>{{ auxArtObj.nombreArtista }}</h4>
+          </div> 
+        </div>
+      </div>
+      <!-- Modal -->
+      <div class="modal fade" id="modal{{ auxArtObj.id }}" tabindex="-1" aria-labelledby="modal{{ auxArtObj.id }}Label" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title text-dark text-center" id="modal{{ auxArtObj.id }}Label">{{ auxArtObj.nombreArtista }}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p class="text-dark"><b>Fecha nacimiento:</b> {{ auxArtObj.fecha_nacimiento}}</p>
+              <p class="text-dark"><b>Biografía:</b> {{ auxArtObj.biografia }}</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+            </div>
           </div>
         </div>
       </div>
-      
-  </div>
+    {% endfor %}
 </section>
-<!-- Segunda sección de artistas -->
-<section class="mb-5" id="artistas">
-  <div class="row justify-content-center">
-    <div class=" text-center pt-0 pb-5">
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-12 align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/Bryartz.jpg' %}" alt="Bryartz" style="max-width: 130px; max-height: 130px;" data-bs-toggle="modal" data-bs-target="#myModal11">
-        <div class="card-body text-center">
-          <h4>Bryartz</h4>
-        </div> 
-      </div>
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/Cognizant.jpg' %}" alt="Cognizant" style="max-width: 130px; max-height: 130px;"data-bs-toggle="modal" data-bs-target="#myModal12">
-        <div class="card-body text-center">
-          <h4>Cognizant</h4>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/CombatWoundedVeteran.jpeg' %}" alt="Combat-Wounded-Veteran" style="max-width: 130px; max-height: 130px;"data-bs-toggle="modal" data-bs-target="#myModal13">
-        <div class="card-body text-center">
-          <h4>Combat Wounded Veteran</h4>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/crismj.jpeg' %}" alt="cris-mj" style="max-width: 130px; max-height: 130px;"data-bs-toggle="modal" data-bs-target="#myModal14">
-        <div class="card-body text-center">
-          <h4>Cris mj</h4>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-2 col-sm-12">
-        <div class="card h-100 border-0 mx-auto align-items-center mb-5 ">
-          <img class="card-img-top" src="{% static 'core/img/d-clone-band.jpg' %}" alt="D-Clone-Band" style="max-width: 130px; max-height: 130px;" data-bs-toggle="modal" data-bs-target="#myModal15">
-          <div class="card-body text-center">
-            <h4>D-Clone</h4>
-          </div>
-        </div>
-      </div>
-  </div>
-</section>
-
-<!-- Tercera sección de artistas -->
-<section class="mb-5" id="artistas">
-  <div class="row justify-content-center">
-    <div class=" text-center pt-0 pb-5">
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-12 align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/deatchtoll80k.png' %}" alt="deatchtoll80k" style="max-width: 130px; max-height: 130px;" data-bs-toggle="modal" data-bs-target="#myModal21">
-        <div class="card-body text-center">
-          <h4>Death Toll 80k</h4>
-        </div> 
-      </div>
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/deiv.jpeg' %}" alt="deiv" style="max-width: 130px; max-height: 130px;" data-bs-toggle="modal" data-bs-target="#myModal22">
-        <div class="card-body text-center">
-          <h4>Dei V</h4>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/discordance-band.jpg' %}" alt="discordance-band" style="max-width: 130px; max-height: 130px;" data-bs-toggle="modal" data-bs-target="#myModal23">
-        <div class="card-body text-center">
-          <h4>Discordance</h4>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/dropdead-band.jpg' %}" alt="dropdead-band" style="max-width: 130px; max-height: 130px;" data-bs-toggle="modal" data-bs-target="#myModal24">
-        <div class="card-body text-center">
-          <h4>dropdead</h4>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-2 col-sm-12">
-        <div class="card h-100 border-0 mx-auto align-items-center mb-5 ">
-          <img class="card-img-top" src="{% static 'core/img/Dontoliver.jpg' %}" alt="Don-toliver" style="max-width: 130px; max-height: 130px;" data-bs-toggle="modal" data-bs-target="#myModal25">
-          <div class="card-body text-center">
-            <h4>Don Toliver</h4>
-          </div>
-        </div>
-      </div>
-  </div>
-</section>
-
-<!-- Cuarta sección de artistas -->
-<section class="mb-5" id="artistas">
-  <div class="row justify-content-center">
-    <div class=" text-center pt-0 pb-5">
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-12 align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/Future.jpg' %}" alt="Future" style="max-width: 130px; max-height: 130px;" data-bs-toggle="modal" data-bs-target="#myModal31">
-        <div class="card-body text-center">
-          <h4>Future</h4>
-        </div> 
-      </div>
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/galeegalee.jpg' %}" alt="galee-galee" style="max-width: 130px; max-height: 130px;" data-bs-toggle="modal" data-bs-target="#myModal32">
-        <div class="card-body text-center">
-          <h4>Galee Galee</h4>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/gridlink-band.jpg' %}" alt="gridlink-band" style="max-width: 130px; max-height: 130px;" data-bs-toggle="modal" data-bs-target="#myModal33">
-        <div class="card-body text-center">
-          <h4>Gridlink</h4>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/insectwarfare.jpg' %}" alt="insect-warfare" style="max-width: 130px; max-height: 130px;" data-bs-toggle="modal" data-bs-target="#myModal34">
-        <div class="card-body text-center">
-          <h4>Insect Warfare</h4>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-2 col-sm-12">
-        <div class="card h-100 border-0 mx-auto align-items-center mb-5 ">
-          <img class="card-img-top" src="{% static 'core/img/internalRot.jpg' %}" alt="internal-Rot" style="max-width: 130px; max-height: 130px;" data-bs-toggle="modal" data-bs-target="#myModal35">
-          <div class="card-body text-center">
-            <h4>Internal Rot</h4>
-          </div>
-        </div>
-      </div>
-  </div>
-</section>
-
-</div>
-<!-- Fin container de las cartas -->
-
-<!-- inicio container de modals -->
-<div class="container">
-<!-- Modal 1 seccion 1 -->
-<div>
-<div class="modal" id="myModal01" data-bs-theme="dark">
-  <div class="modal-dialog">
-    <div class="modal-content">
-
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <h4 class="modal-title" >Agoraphobic Nosebleed</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <!-- Modal body -->
-      <div class="modal-body">
-        
-Agoraphobic Nosebleed es una banda estadounidense de grindcore y power violence originaria de Springfield, Massachusetts. Fundada en la década de 1990, la banda se caracteriza por su estilo extremadamente rápido, caótico y abrasivo, que fusiona elementos de grindcore, powerviolence, death metal y electrónica. Sus letras suelen abordar temas oscuros y provocativos, a menudo tocando temas como la violencia, la alienación social y la misantropía.
-      </div>
-
-      <!-- Modal footer -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
-      </div>
-
-    </div>
-  </div>
-</div>
-<!-- Modal 2 seccion 1  -->
-<div class="modal" id="myModal02"  data-bs-theme="dark">
-  <div class="modal-dialog">
-    <div class="modal-content">
-
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <h4 class="modal-title">Arse Destroyer</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <!-- Modal body -->
-      <div class="modal-body">
-        Arse Destroyer es una banda de grindcore originaria de algún lugar de Europa, cuyo enfoque musical está arraigado en la brutalidad y la velocidad característica del género. Fundada en algún momento de la década de 2000, la banda se ha ganado una reputación por su enfoque implacablemente agresivo de la música.
-      </div>
-
-      <!-- Modal footer -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
-      </div>
-
-    </div>
-  </div>
-</div>
-<!-- Modal 3 seccion 1 -->
-<div class="modal" id="myModal03"  data-bs-theme="dark">
-  <div class="modal-dialog">
-    <div class="modal-content">
-
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <h4 class="modal-title">A$AP Rocky</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <!-- Modal body -->
-      <div class="modal-body">
-        
-A$AP Rocky es un rapero, cantante, compositor y productor musical estadounidense, reconocido por su estilo distintivo que combina elementos del hip-hop, el rap y la moda urbana. Nacido como Rakim Mayers el 3 de octubre de 1988 en Harlem, Nueva York, A$AP Rocky emergió en la escena musical a principios de la década de 2010 y rápidamente se convirtió en una figura influyente en la cultura hip-hop.
-      </div>
-
-      <!-- Modal footer -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
-      </div>
-
-    </div>
-  </div>
-</div>
-<!-- Modal 4 seccion 1 -->
-<div class="modal" id="myModal04"  data-bs-theme="dark">
-  <div class="modal-dialog">
-    <div class="modal-content">
-
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <h4 class="modal-title">Assück</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <!-- Modal body -->
-      <div class="modal-body">
-        Assück fue una influyente banda estadounidense de grindcore y death metal que se formó en 1987 en Florida. Su estilo musical se caracterizaba por su brutalidad, velocidad y letras profundamente políticas y críticas de la sociedad contemporánea.
-        Aunque la banda se disolvió en la década de 1990, su impacto en la música extrema continúa siendo relevante hasta el día de hoy, y siguen siendo una referencia clave para los amantes del grindcore y el death metal comprometido con la crítica social y la expresión artística radical.
-
-
-
-
-
-
-      </div>
-
-      <!-- Modal footer -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
-      </div>
-
-    </div>
-  </div>
-</div>
-<!-- Modal 5 seccion 1 -->
-<div class="modal" id="myModal05"  data-bs-theme="dark">
-  <div class="modal-dialog">
-    <div class="modal-content">
-
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <h4 class="modal-title">Baby Keem</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <!-- Modal body -->
-      <div class="modal-body">
-       
-Baby Keem es un rapero, cantante y productor musical estadounidense conocido por su estilo fresco y versátil dentro del género del hip-hop. Nacido como Hykeem Jamaal Carter Jr., Baby Keem irrumpió en la escena musical con una serie de lanzamientos que capturaron la atención de la industria y los fanáticos por igual.
-      </div>
-
-      <!-- Modal footer -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">cerrar</button>
-      </div>
-
-    </div>
-  </div>
-</div>
-</div>
-
-<!-- Modal 1 seccion 2 -->
-<div>
-  <div class="modal" id="myModal11"  data-bs-theme="dark">
-    <div class="modal-dialog">
-      <div class="modal-content">
-  
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Bryartz</h4>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-  
-        <!-- Modal body -->
-        <div class="modal-body">
-          Bryan Flores alias Bryartz, artista Chileno de 25 años empezo su carrera como cantante en 2019, destacandose dentro del género del trap.
-        </div>
-  
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        </div>
-  
-      </div>
-    </div>
-  </div>
-  <!-- Modal 2 seccion 2  -->
-  <div class="modal" id="myModal12"  data-bs-theme="dark">
-    <div class="modal-dialog">
-      <div class="modal-content">
-  
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Cognizant</h4>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-  
-        <!-- Modal body -->
-        <div class="modal-body">
-          Cognizant es una banda de grindcore originaria de algún lugar de los Estados Unidos, aunque no es ampliamente conocida fuera de ciertos círculos dentro de la escena del grindcore y el metal extremo. Su música está arraigada en la tradición del grindcore, caracterizada por su brutalidad, velocidad y letras a menudo políticas y sociales.
-        </div>
-  
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        </div>
-  
-      </div>
-    </div>
-  </div>
-  <!-- Modal 3 seccion 2 -->
-  <div class="modal" id="myModal13"  data-bs-theme="dark">
-    <div class="modal-dialog">
-      <div class="modal-content">
-  
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Combat Wounded Veteran</h4>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-  
-        <!-- Modal body -->
-        <div class="modal-body">
-          Combat Wounded Veteran fue una banda estadounidense de powerviolence y hardcore punk, formada en Florida a mediados de la década de 1990. Se destacaron por su sonido caótico, frenético y extremadamente agresivo, que fusionaba elementos del punk, el hardcore y el grindcore.
-          Aunque la banda se separó a principios de la década de 2000, su legado continúa siendo relevante para los fanáticos del punk y el hardcore que aprecian la música agresiva y comprometida con la crítica social. Combat Wounded Veteran sigue siendo recordado como una de las bandas más feroces y distintivas de su época.
-
-        </div>
-  
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        </div>
-  
-      </div>
-    </div>
-  </div>
-  <!-- Modal 4 seccion 2 -->
-  <div class="modal" id="myModal14"  data-bs-theme="dark">
-    <div class="modal-dialog">
-      <div class="modal-content">
-  
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Cris MJ</h4>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-  
-        <!-- Modal body -->
-        <div class="modal-body">
-          Cristhofer Andrés Álvarez García alías Cris MJ es un cantante chileno de música urbana de 22 años que ha logrado un éxito rotundo en los últimos años. Conocido por su voz melodiosa y letras románticas, se ha convertido en uno de los artistas más populares de su género.
-        </div>
-  
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        </div>
-  
-      </div>
-    </div>
-  </div>
-  <!-- Modal 5 seccion 2 -->
-  <div class="modal" id="myModal15"  data-bs-theme="dark">
-    <div class="modal-dialog">
-      <div class="modal-content">
-  
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">D-Clone</h4>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-  
-        <!-- Modal body -->
-        <div class="modal-body">
-          
-D-Clone es una banda japonesa de hardcore punk que se formó en la ciudad de Hiroshima en el año 2002. Son conocidos por su estilo agresivo y enérgico, que se caracteriza por tempos rápidos, voces gritadas y letras políticamente cargadas.
-
-La música de D-Clone está influenciada por el hardcore punk clásico de los años 80, así como por el crust punk y el d-beat. Tienen un sonido crudo y caótico que refleja la intensidad y la rabia de sus temas líricos, que abordan temas como la injusticia social, la alienación y la lucha contra el sistema.
-
-A lo largo de los años, D-Clone ha ganado una base de seguidores tanto en Japón como internacionalmente, gracias a su dedicación a la escena DIY (hazlo tú mismo) y a sus actuaciones en vivo explosivas. Son conocidos por su compromiso con los valores punk, como la autenticidad, la resistencia y la solidaridad, lo que los convierte en una banda destacada dentro del panorama del hardcore punk contemporáneo.
-        </div>
-  
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        </div>
-  
-      </div>
-    </div>
-  </div>
-  </div>
-
-<!-- Modal 1 seccion 3 -->
-<div>
-  <div class="modal" id="myModal21"  data-bs-theme="dark">
-    <div class="modal-dialog">
-      <div class="modal-content">
-  
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Death Toll 80k</h4>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-  
-        <!-- Modal body 3 -->
-        <div class="modal-body">
-          Death Toll 80k es una banda de grindcore y powerviolence originaria de Finlandia, formada en el año 2008. Su sonido se caracteriza por su brutalidad y velocidad extrema, combinando elementos del grindcore clásico con influencias del powerviolence y el death metal.
-        </div>
-  
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        </div>
-  
-      </div>
-    </div>
-  </div>
-  <!-- Modal 2 seccion 3 -->
-  <div class="modal" id="myModal22"  data-bs-theme="dark">
-    <div class="modal-dialog">
-      <div class="modal-content">
-  
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Dei V</h4>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-  
-        <!-- Modal body -->
-        <div class="modal-body">
-          Dei V, nacido como David Gerardo Rivera Juarbe en 1995, es un cantante y compositor puertorriqueño del género urbano latino. Inició su carrera en 2020 y ha logrado un rápido ascenso, colaborando con artistas como Mora y Karol G. Se destaca por su ritmo único y capacidad interpretativa, cautivando a los amantes del género urbano y acumulando millones de reproducciones en plataformas digitales.
-        </div>
-  
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        </div>
-  
-      </div>
-    </div>
-  </div>
-  <!-- Modal 3 seccion 3 -->
-  <div class="modal" id="myModal23"  data-bs-theme="dark">
-    <div class="modal-dialog">
-      <div class="modal-content">
-  
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Discordance</h4>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-  
-        <!-- Modal body -->
-        <div class="modal-body">
-         
-Discordance Axis fue una influyente banda de grindcore y powerviolence originaria de Nueva Jersey, Estados Unidos, activa desde principios de la década de 1990 hasta mediados de la década de 2000. La banda estaba compuesta por Jon Chang en la voz, Rob Marton en la guitarra y Dave Witte en la batería. Son reconocidos por su enfoque innovador y extremadamente técnico del género.  Aunque se separaron en 2001, Discordance Axis sigue siendo recordado como una de las bandas más influyentes dentro del género del grindcore y el powerviolence, dejando un legado duradero en la música extrema.
-        </div>
-  
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        </div>
-  
-      </div>
-    </div>
-  </div>
-  <!-- Modal 4 seccion 3 -->
-  <div class="modal" id="myModal24"  data-bs-theme="dark">
-    <div class="modal-dialog">
-      <div class="modal-content">
-  
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Dropdead</h4>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-  
-        <!-- Modal body -->
-        <div class="modal-body">
-         
-Dropdead es una banda de hardcore punk y grindcore formada en Providence, Rhode Island, Estados Unidos, en el año 1991. Son reconocidos por su enfoque DIY (hazlo tú mismo), su ética punk y su música intensamente política.
-        </div>
-  
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        </div>
-  
-      </div>
-    </div>
-  </div>
-  <!-- Modal 5 seccion 3 -->
-  <div class="modal" id="myModal25"  data-bs-theme="dark">
-    <div class="modal-dialog">
-      <div class="modal-content">
-  
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Don toliver</h4>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-  
-        <!-- Modal body -->
-        <div class="modal-body">
-          Don Toliver, nacido Caleb Zackery Toliver en 1994, es un cantante, compositor y productor estadounidense. Saltó a la fama en 2018 con su éxito "Diva" y desde entonces se ha consolidado como una de las estrellas del R&B y el Hip-Hop.
-
-Su música se caracteriza por su mezcla de géneros, combinando elementos de R&B, Hip-Hop, Trap y Psicodelia. Sus letras son introspectivas y honestas, explorando temas como el amor, la pérdida y la búsqueda de la identidad.
-        </div>
-  
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        </div>
-  
-      </div>
-    </div>
-  </div>
-  </div> 
-  
-<!-- Modal 1 seccion 4 -->
-<div>
-  <div class="modal" id="myModal31" data-bs-theme="dark">
-    <div class="modal-dialog">
-      <div class="modal-content">
-  
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Future</h4>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-  
-        <!-- Modal body -->
-        <div class="modal-body">
-
-          Future, cuyo nombre real es Nayvadius DeMun Cash (nacido en 1983), es un rapero, cantante y productor discográfico estadounidense. Considerado uno de los artistas más influyentes de su generación, Future es conocido por su característico estilo vocal melódico y uso del Auto-Tune en el trap.
-          
-          Su prolífica carrera incluye numerosos mixtapes y álbumes exitosos, siendo "Pluto" (2012) uno de los más destacados. Ha colaborado con grandes figuras de la industria como Drake y Kendrick Lamar, y ha cosechado varios premios Grammy por su trabajo. Además de su música, Future también ha lanzado su propio sello discográfico, Freebandz Records.        </div>
-  
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        </div>
-  
-      </div>
-    </div>
-  </div>
-  <!-- Modal 2 seccion 4 -->
-  <div class="modal" id="myModal32" data-bs-theme="dark">
-    <div class="modal-dialog">
-      <div class="modal-content">
-  
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Galee Galee</h4>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-  
-        <!-- Modal body -->
-        <div class="modal-body">
-          Gabriel Zúñiga, más conocido como Galee Galee, fue un cantante chileno de música urbana que nació en Pudahuel, Santiago de Chile, en 1994. Su música, que combinaba trap, reggaetón y otros géneros como el drill, se caracterizaba por su voz grave y áspera, y por letras que reflejaban las realidades sociales de su entorno. Su muerte prematura conmocionó a la escena musical chilena y dejó un vacío irremplazable.        </div>
-  
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        </div>
-  
-      </div>
-    </div>
-  </div>
-  <!-- Modal 3 seccion 4 -->
-  <div class="modal" id="myModal33" data-bs-theme="dark">
-    <div class="modal-dialog">
-      <div class="modal-content">
-  
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Gridlink</h4>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-  
-        <!-- Modal body -->
-        <div class="modal-body">
-          Gridlink es una banda estadounidense de grindcore formada en 2001 en San Francisco, California. La banda se caracteriza por su sonido técnico y brutal, con riffs complejos, blast beats y voces guturales.
-
-        </div>
-  
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        </div>
-  
-      </div>
-    </div>
-  </div>
-  <!-- Modal 4 seccion 4 -->
-  <div class="modal" id="myModal34" data-bs-theme="dark">
-    <div class="modal-dialog">
-      <div class="modal-content">
-  
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Insect Warfare</h4>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-  
-        <!-- Modal body -->
-        <div class="modal-body">
-          Insect Warfare es una banda estadounidense de grindcore formada en 2002 en Richmond, Virginia. La banda se caracteriza por su sonido caótico y apocalíptico, con riffs disonantes, blast beats frenéticos y voces guturales.        </div>
-  
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        </div>
-  
-      </div>
-    </div>
-  </div>
-  <!-- Modal 5 seccion 4 -->
-  <div class="modal" id="myModal35" data-bs-theme="dark">
-    <div class="modal-dialog">
-      <div class="modal-content">
-  
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Internal Rot</h4>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-  
-        <!-- Modal body -->
-        <div class="modal-body">
-          Internal Rot es una banda estadounidense de grindcore formada en 2012 en Syracuse, Nueva York. La banda se caracteriza por su sonido visceral y misántropo, con riffs pesados ​​y disonantes, blast beats implacables y voces guturales.
-        </div>
-  
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-        </div>
-  
-      </div>
-    </div>
-  </div>
-  </div>   
-</div>
-
-    
-
-<style> 
-  .egg-link {
-    color: white;
-  }
-</style>
-
-<div class="container mt-5">
-  <a href="/egg.html" class="egg-link">EGG</a>
-</div>
-
-<ul class="pagination justify-content-center" data-bs-theme="dark" >
-  <li class="page-item disabled"><a class="page-link" href="#">1</a></li>
-  <li class="page-item"><a class="page-link text-white" href="artistas2.html">2</a></li>
-  <li class="page-item"><a class="page-link text-white" href="artistas2.html">Siguiente</a></li>
-</ul>
-
-
-<!-- Footer -->
-<footer class="footer">
-  <div class="container-fluid">
-    <p class="mb-0" style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">GRUPO CERO</p>
-    <p style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">TODOS LOS DERECHOS RESERVADOS @ 2024</p>
-    <button type="button" class="btn btn-outline-light btn-contacto" data-bs-toggle="modal" data-bs-target="#formularioContacto">Contacto</button>
-  </div>
-</footer>
-<!-- Fin del footer -->
-
 
 <!-- Latest compiled JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

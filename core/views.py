@@ -12,10 +12,18 @@ def index (request):
     return render(request, 'core/index.html')
 
 def artistas (request):
-    return render(request, 'core/artistas.html')
+    auxArtObj = {
+        'listaArtObj' : Artista.objects.all()
+    }
+
+    return render(request, 'core/artistas.html', auxArtObj)
 
 def lanzamientos (request):
-    return render(request, 'core/lanzamientos.html')
+    auxLanzObj = {
+        'listaLanzObj' : Lanzamiento.objects.all()
+    }
+
+    return render(request, 'core/lanzamientos.html', auxLanzObj)
 
 def loginmiembros (request):
     return render(request, 'core/miembros/loginMiembros.html')
@@ -29,6 +37,12 @@ def addtipolanzamientos (request):
 def addgeneros (request):
     return render(request, 'core/miembros/generos/crud/add.html')
 
+def adminsindex (request):
+    return render(request, 'core/admins/adminsIndex.html')
+
+def loginadmins (request):
+    return render(request, 'core/admins/loginAdmins.html')
+
 # LOGIN 
 
 def logincliente(request):
@@ -40,26 +54,50 @@ def logincliente(request):
         user = authenticate(request, username=username, password=password)
         
         if user is not None:
-            # Verificar si el usuario es un cliente
             if user.groups.filter(name='clientes').exists():
-                # Si el usuario es un cliente, iniciar sesión
                 login(request, user)
-                return redirect('index')  # Redirigir a la página del cliente
+                return redirect('index')
             elif user.groups.filter(name='miembros').exists():
                 messages.error(request, 'Solo los clientes pueden iniciar sesión en este sitio.')
                 return redirect('index')
         else:
-            # Si las credenciales son incorrectas, mostrar un mensaje de error
             messages.error(request, 'Credenciales de inicio de sesión incorrectas.')
             return redirect('index')
 
-    return render(request, 'index')  # Renderiza la plantilla de inicio con el modal
+    return render(request, 'index')
 
 def logout_view(request):
     logout(request)
-    return redirect('index')  # Redirige a la página de inicio u otra página después de cerrar sesión
+    return redirect('index')  
 
 def loginmiembro(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+        
+        try:
+            user = User.objects.get(email=email)
+            username = user.username
+            user = authenticate(request, username=username, password=password)
+            
+            if user is not None:
+                if user.groups.filter(name='miembros').exists():
+                    login(request, user)
+                    return redirect('miembrosindex')
+                elif user.groups.filter(name='clientes').exists():
+                    messages.error(request, 'Solo los miembros pueden iniciar sesión en este sitio.')
+                    return redirect('loginmiembros')
+            else:
+                messages.error(request, 'Credenciales de inicio de sesión incorrectas.')
+                return redirect('loginmiembros')
+        
+        except User.DoesNotExist:
+            messages.error(request, 'No existe un usuario con ese correo electrónico.')
+            return redirect('loginmiembros')
+    
+    return render(request, 'loginmiembros')
+
+def loginadmin(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -68,20 +106,19 @@ def loginmiembro(request):
         user = authenticate(request, username=username, password=password)
         
         if user is not None:
-            # Verificar si el usuario es un miembro
-            if user.groups.filter(name='miembros').exists():
-                # Si el usuario es un cliente, iniciar sesión
+            if user.groups.filter(name='administradores').exists():
                 login(request, user)
-                return redirect('miembrosindex')  # Redirigir a la página del cliente
+                return redirect('adminsindex') 
             elif user.groups.filter(name='clientes').exists():
-                messages.error(request, 'Solo los miembros pueden iniciar sesión en este sitio.')
-                return redirect('loginmiembros')
+                messages.error(request, 'Solo los administradores pueden iniciar sesión en este sitio.')
+                return redirect('loginadmins')
+            elif user.groups.filter(name='miembros').exists():
+                messages.error(request, 'Solo los administradores pueden iniciar sesión en este sitio.')
         else:
-            # Si las credenciales son incorrectas, mostrar un mensaje de error
             messages.error(request, 'Credenciales de inicio de sesión incorrectas.')
-            return redirect('loginmiembros')
+            return redirect('loginadmins')
 
-    return render(request, 'loginmiembros')  # Renderiza la plantilla de inicio con el modal
+    return render(request, 'loginadmins')  
 
 # REGISTRO
 
@@ -118,156 +155,136 @@ def registercliente(request):
     return render(request, 'index')
 
 # TIPO LANZAMIENTOS
-
 def tipolanzamientosobjects(request):
-    tipolanzamientos = TipoLanzamiento.objects.all()
-    aux = {
-        'lista' : tipolanzamientos
+    auxTipoObj = {
+        'listaTipoObj' : TipoLanzamiento.objects.all()
     }
 
-    return render(request,'core/miembros/miembrosIndex.html', aux)
+    return render(request, 'core/miembros/tipoLanzamientos/tipolanzamientosobjects.html', auxTipoObj)
 
 def tipolanzamientosadd(request):
     aux = {
-        'form'  : TipoLanzamientoForm()
+        'form': TipoLanzamientoForm()
     }
 
     if request.method == 'POST':
-        formulario = TipoLanzamiento(request.POST)
+        formulario = TipoLanzamientoForm(request.POST)
         if formulario.is_valid():
             formulario.save()
-            aux['msj'] = "¡Tipo de lanzamiento guardado correctamente!"
+            aux['msj'] = "Tipo lanzamiento guardado correctamente!"
         else:
             aux['form'] = formulario
-            aux['msj'] = "¡Error al guardar tipo de lanzamiento!"
+            aux['msj'] = "¡Error al guardar el tipo de lanzamiento!"
 
     return render(request, 'core/miembros/tipoLanzamientos/crud/add.html', aux)
 
 def tipolanzamientosupdate(request, id):
-    tipolanzamientos = TipoLanzamiento.objects.get(id=id)
+    tipo = TipoLanzamiento.objects.get(id=id)
+
+    if request.method == 'POST':
+        formulario = TipoLanzamientoForm(data=request.POST, instance=tipo)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('tipolanzamientosobjects')
+    else:
+        formulario = TipoLanzamientoForm(instance=tipo)
+
+    return render(request, 'core/miembros/tipoLanzamientos/crud/update.html', {'form': formulario, 'tipo': tipo})
+
+def tipolanzamientosdelete(request, id):
+    tipo = TipoLanzamiento.objects.get(id=id)
+    tipo.delete()
+    
+    return redirect(reverse('tipolanzamientosobjects'))
+
+# ARTISTAS
+def artistasobjects(request):
+    auxArtObj = {
+        'listaArtObj' : Artista.objects.all()
+    }
+
+    return render(request, 'core/miembros/artistas/artistasobjects.html', auxArtObj)
+
+def artistasadd(request):
     aux = {
-        'form'  : TipoLanzamientoForm(instance=tipolanzamientos)
+        'form': ArtistaForm()
     }
 
     if request.method == 'POST':
-        formulario = TipoLanzamientoForm(request.POST, instance=tipolanzamientos)
+        formulario = ArtistaForm(request.POST, request.FILES) 
         if formulario.is_valid():
             formulario.save()
-            aux['msj'] = "¡Tipo de lanzamiento actualizado correctamente!"
+            aux['msj'] = "Artista guardado correctamente!"
         else:
             aux['form'] = formulario
-            aux['msj'] = "¡Error al actualizar tipo de lanzamiento!"
+            aux['msj'] = "¡Error al guardar el artistal!"
 
-    return render(request, 'core/miembros/tipoLanzamientos/crud/update.html', aux)
+    return render(request, 'core/miembros/artistas/crud/add.html', aux)
 
-def tipolanzamientosdelete(id):
-    tipolanzamientos = TipoLanzamiento.objects.get(id=id)
-    tipolanzamientos.delete()
+def artistasupdate(request, id):
+    artista = Artista.objects.get(id=id)
 
-    return redirect(to = 'core/miembros/miembrosIndex.html')
+    if request.method == 'POST':
+        formulario = ArtistaForm(data=request.POST, instance=artista)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('artistasobjects')
+    else:
+        formulario = ArtistaForm(instance=artista)
 
+    return render(request, 'core/miembros/artistas/crud/update.html', {'form': formulario, 'artista': artista})
+
+def artistasdelete(request, id):
+    artista = Artista.objects.get(id=id)
+    artista.delete()
+    
+    return redirect(reverse('artistasobjects'))
 
 # LANZAMIENTOS
-
 def lanzamientosobjects(request):
-    lanzamientos = Lanzamiento.objects.all()
-    aux = {
-        'lista' : lanzamientos
+    auxLanzObj = {
+        'listaLanzObj' : Lanzamiento.objects.all()
     }
 
-    return render(request,'core/miembros/miembrosIndex.html', aux)
+    return render(request, 'core/miembros/lanzamientos/lanzamientosobjects.html', auxLanzObj)
 
 def lanzamientosadd(request):
     aux = {
-        'form'  : LanzamientoForm()
+        'form': LanzamientoForm()
     }
 
     if request.method == 'POST':
-        formulario = Lanzamiento(request.POST)
+        formulario = LanzamientoForm(request.POST, request.FILES)
         if formulario.is_valid():
             formulario.save()
-            aux['msj'] = "¡Lanzamiento guardado correctamente!"
+            aux['msj'] = "Lanzamiento guardado correctamente!"
         else:
             aux['form'] = formulario
-            aux['msj'] = "¡Error al guardar lanzamiento!"
+            aux['msj'] = "¡Error al guardar el lanzamiento!"
 
     return render(request, 'core/miembros/lanzamientos/crud/add.html', aux)
 
 def lanzamientosupdate(request, id):
     lanzamientos = Lanzamiento.objects.get(id=id)
-    aux = {
-        'form'  : LanzamientoForm(instance=lanzamientos)
-    }
 
     if request.method == 'POST':
-        formulario = LanzamientoForm(request.POST, instance=lanzamientos)
+        formulario = LanzamientoForm(data=request.POST, instance=lanzamientos)
         if formulario.is_valid():
             formulario.save()
-            aux['msj'] = "¡Lanzamiento actualizado correctamente!"
-        else:
-            aux['form'] = formulario
-            aux['msj'] = "¡Error al actualizar lanzamiento!"
+            return redirect('lanzamientosobjects')
+    else:
+        formulario = LanzamientoForm(instance=lanzamientos)
 
-    return render(request, 'core/miembros/lanzamientos/crud/update.html', aux)
+    return render(request, 'core/miembros/lanzamientos/crud/update.html', {'form': formulario, 'lanzamientos': lanzamientos})
 
-def lanzamientosdelete(id):
+def lanzamientosdelete(request, id):
     lanzamientos = Lanzamiento.objects.get(id=id)
     lanzamientos.delete()
+    
+    return redirect(reverse('lanzamientosobjects'))
 
-    return redirect(to = "core/miembros/miembrosIndex.html")
-
-
-# ARTISTAS
-
-def artistasobjects(request):
-    artistas = Artista.objects.all()
-    aux = {
-        'lista' : artistas
-    }
-
-    return render(request, 'core/miembros/miembrosIndex.html', aux)
-
-def artistasadd(request):
-    aux = {
-        'form' : ArtistaForm()
-    }
-
-    if request.method == 'POST':
-        formulario = Artista(request.POST)
-        if formulario.is_valid():
-            formulario.save()
-            aux['msj'] = "¡Artista guardado correctamente!"
-        else:
-            aux['form'] = formulario
-            aux['msj'] = "¡Error al guardar artista!"
-
-    return render(request, 'core/miembros/artistas/crud/add.html', aux)
-
-def artistasupdate(request, id):
-    artistas = Artista.objects.get(id=id)
-    aux = {
-        'form' : ArtistaForm(instance=artistas)
-    }
-
-    if request.method == 'POST':
-        formulario = ArtistaForm(request.POST, instance=artistas)
-        if formulario.is_valid():
-            formulario.save()
-            aux['msj'] = "¡Artista actualizado correctamente!"
-        else:
-            aux['form'] = formulario
-            aux['msj'] = "¡Error al actualizar artista!"
-
-    return render(request, 'core/miembros/artistas/crud/update.html', aux)
-
-def artistasdelete(id):
-    artistas = Artista.objects.get(id=id)
-    artistas.delete()
-
-    return redirect(to = "core/miembros/miembrosIndex.html")
 
 # GÉNERO MUSICAL
-
 def generosobjects(request):
     auxGenObj = {
         'listaGenObj' : GeneroMusical.objects.all()
@@ -309,3 +326,39 @@ def generosdelete(request, id):
     genero.delete()
     
     return redirect(reverse('generosobjects'))
+
+# ADMINS
+def registermiembro(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        email = request.POST['email']
+        password1 = request.POST['password']
+        password2 = request.POST['password_confirmation']
+
+        if password1 != password2:
+            messages.error(request, 'Las contraseñas no coinciden.')
+            return redirect('adminsindex')
+        elif len(password1) < 8:
+            messages.error(request, 'La contraseña debe tener al menos 8 caracteres.')
+            return redirect('adminsindex')
+        elif len(username) < 3:
+            messages.error(request, 'El nombre de usuario debe tener al menos 3 caracteres.')
+            return redirect('adminsindex')
+        elif User.objects.filter(username=username).exists():
+            messages.error(request, 'El nombre de usuario ya está en uso.')
+            return redirect('adminsindex')
+        elif User.objects.filter(email=email).exists():
+            messages.error(request, 'El correo electrónico ya está en uso.')
+            return redirect('adminsindex')
+        else:
+            user = User.objects.create_user(username=username, email=email, password=password1)
+            miembro_group = Group.objects.get(name='miembros')
+            user.groups.add(miembro_group)
+            user.save()
+            messages.success(request, 'Cuenta de miembro creada correctamente')
+            return redirect('adminsindex')
+
+    return render(request, 'adminsindex')
+
+
+

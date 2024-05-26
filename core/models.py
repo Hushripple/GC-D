@@ -1,18 +1,13 @@
 from django.db import models
+from django import forms
 
 # Create your models here.
     
 class TipoLanzamiento(models.Model):
-    TIPO_CHOICES = [
-        ('single', 'Single'),
-        ('album', 'Álbum'),
-        ('ep', 'EP'),
-    ]
-
-    nombreTipo = models.CharField(max_length=20, choices=TIPO_CHOICES)
+    nombreTipo = models.CharField(max_length=20)
 
     def __str__(self):
-        return dict(self.TIPO_CHOICES)[self.nombreTipo]
+        return self.nombreTipo
     
     class Meta:
         verbose_name = "Tipo de lanzamiento"
@@ -22,7 +17,13 @@ class Artista(models.Model):
     nombreArtista = models.CharField(max_length=50)
     fecha_nacimiento = models.DateField(null=True, blank=True)
     biografia = models.TextField()
-    #imagen = models.ImageField(upload_to=upload_to_artista, null=True, blank=True)
+    imagen = models.ImageField(upload_to='artistas/', null=False, blank=False)
+
+    def clean_imagen(self):
+        imagen = self.cleaned_data.get('imagen')
+        if not imagen:
+            raise forms.ValidationError("Este campo es obligatorio.")
+        return imagen
 
     def __str__(self):
         return self.nombreArtista
@@ -49,6 +50,7 @@ class Lanzamiento(models.Model):
     genero = models.ForeignKey(GeneroMusical, on_delete=models.CASCADE)
     descripcionLanzamiento = models.TextField()
     precio = models.IntegerField(default=0)
+    imagen = models.ImageField(upload_to='lanzamientos/', null=True, blank=True)
 
     def __str__(self):
         return self.nombreLanzamiento

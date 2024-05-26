@@ -12,7 +12,7 @@
 <body>
 
 <!-- Inicio menú con logo -->
-<nav class="navbar navbar-expand-sm bg-success navbar-light justify-content-center">
+<nav class="navbar navbar-expand-sm bg-light navbar-light justify-content-center">
   <div class="container-fluid">
     <div class="container-fluid">
       <a class="navbar-brand" href="{% url 'index' %}">
@@ -20,15 +20,30 @@
       </a>
     </div>
     <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#registroModal">Registro</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="ACÁ DEBE IR UN LOGIN COMO MIEMBRO" >Miembro</a>
-      </li>
+      {% if not user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link text-center" href="#">Bienvenido, Invitado</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#registroModal">Registro</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'loginmiembros' %}">Miembro</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'loginadmins' %}">Admin</a>
+        </li>          
+      {% else %}
+        <li class="nav-item">
+          <a class="nav-link text-center" href="#">Bienvenido, {{ user.username }}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'logout' %}">Cerrar sesión</a>
+        </li>
+      {% endif %}
     </ul>
   </div>
   <form class="d-flex">
@@ -43,27 +58,33 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title text-black" id="registroModalLabel">Registro</h5>
+        <h5 class="modal-title" id="registroModalLabel" style="color:black">Registro</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <!-- Formulario de registro -->
-      <div class="modal-body">
-        <form>
-          <div class="mb-3">
-            <label for="emailRegistro " class="form-label text-black">Email</label>
-            <input type="email" class="form-control" id="txtEmail" required>
-          </div>
-          <div class="mb-3">
-            <label for="nombreRegistro " class="form-label text-black">Usuario</label>
-            <input type="text" class="form-control" id="txtUsuario" required>
-          </div>
-          <div class="mb-3">
-            <label for="passwordRegistro " class="form-label text-black">Contraseña</label>
-            <input type="password" class="form-control" id="txtPassword" required>
-          </div>
-          <button type="submit" class="btn btn-dark">Registrarse</button>
-        </form>
-      </div>
+        <div class="modal-body">
+          <form method="POST" action="{% url 'registercliente' %}">
+              {% csrf_token %}
+              <div class="mb-3">
+                  <label for="emailRegistro" class="form-label" style="color:black">Email</label>
+                  <input type="email" class="form-control" id="txtEmail" name="email" placeholder="Introduce un email" required>
+              </div>
+              <div class="mb-3">
+                  <label for="nombreRegistro" class="form-label" style="color:black">Nombre de usuario</label>
+                  <input type="text" class="form-control" id="txtUsuario" name="username" placeholder="Introduce un nombre de usuario" required>
+              </div>
+              <div class="mb-3">
+                  <label for="passwordRegistro" class="form-label" style="color:black">Contraseña</label>
+                  <input type="password" class="form-control" id="txtPassword" name="password" placeholder="Introduce una contraseña" required>
+              </div>
+              <div class="mb-3">
+                  <label for="passwordRepetirRegistro" class="form-label" style="color:black">Confirmar contraseña</label>
+                  <input type="password" class="form-control" id="txtPasswordConfirmation" name="password_confirmation" placeholder="Vuelva a introducir contraseña" required>
+              </div>
+              <button type="submit" class="btn btn-dark">Registrarse</button>
+          </form>
+        </div>
+      <!-- Fin formulario registro -->
     </div>
   </div>
 </div>
@@ -71,28 +92,46 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title text-black" id="loginModalLabel " >Iniciar sesión</h5>
+        <h5 class="modal-title" id="loginModalLabel" style="color: black;">Iniciar sesión</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <!-- Formulario de inicio de sesión -->
       <div class="modal-body">
-        <form action="loginlanzamientos.html">
+        <form action="{% url 'login' %}" method="POST">
+          {% csrf_token %}
           <div class="mb-3">
-            <label for="emailLogin" class="form-label text-black">Email</label>
-            <input type="email" class="form-control" id="txtEmail" required>
+            <label for="username" class="form-label" style="color: black;">Nombre de usuario</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="Introduce tu usuario" required>
           </div>
           <div class="mb-3">
-            <label for="passwordLogin" class="form-label text-black">Contraseña</label>
-            <input type="password" class="form-control" id="txtPassword" required>
+            <label for="password" class="form-label" style="color: black;">Contraseña</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Introduce tu contraseña" required>
           </div>
-          <button type="submit" class="btn btn-dark">Iniciar sesión</button>
+          <button type="submit" class="btn btn-dark" style="color: white;">Iniciar sesión</button>
         </form>
       </div>
     </div>
   </div>
 </div>
-<!-- Fin modals para registro e inicio de sesión -->
 
+<!-- Mensajes -->
+{% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      {% if message.tags == 'success' %}
+        <div class="alert alert-success" role="alert">
+          {{ message }}
+        </div>
+      {% else %}
+        <div class="alert alert-danger" role="alert">
+          {{ message }}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endif %}
+
+<!-- Fin modals para registro e inicio de sesión -->
 <!-- container de las cartas -->
 <div class="container"> 
 <!-- Inicio card para contador de productos -->
@@ -108,159 +147,54 @@
 </div>
 <!-- Fin card para contador de productos -->
 
-<!-- Inicio cards para artistas -->
-<section class="mb-5" id="artistas">
+<!-- Inicio cards para lanzamientos -->
+<section class="mb-5" id="lanzamientos">
   <div class="row justify-content-center">
     <h2 class="text-center my-4" style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;"><strong>LANZAMIENTOS</strong></h2>
-    <div class=" text-center pt-0 pb-5">
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-12 align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/damn-album.jpeg' %}" alt="k-dot" style="max-width: 130px; max-height: 130px;" data-bs-toggle="modal" data-bs-target="#myModal01">
-        <div class="card-body text-center">
-          <h4>DAMN</h4>
-        </div> 
-      </div>
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/agoraphobic-album.jpeg' %}" alt="Agoraphobic" style="max-width: 130px; max-height: 130px;" data-bs-toggle="modal" data-bs-target="#myModal02">
-        <div class="card-body text-center">
-          <h4>Despise You And On And On...</h4>
+    <div class="text-center pt-0 pb-5"></div>
+    {% for auxLanzObj in listaLanzObj %}
+      <div class="col-md-2 col-sm-12">
+        <div class="card h-100 border-0 mx-12 align-items-center mb-5">
+          {% if auxLanzObj.imagen %}
+            <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#modal{{ auxLanzObj.id }}">
+              <img class="card-img-top" src="{{ auxLanzObj.imagen.url }}" alt="imagenLanzamiento" style="max-width: 130px; max-height: 130px;">
+            </button>
+          {% endif %}
+          <div class="card-body text-center">
+            <h4>{{ auxLanzObj.nombreLanzamiento }}</h4>
+            <p>Artista: {{ auxLanzObj.artista }}</p>
+          </div> 
         </div>
       </div>
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/sete-album.jpg' %}" alt="revision-of-noise" style="max-width: 130px; max-height: 130px;" data-bs-toggle="modal" data-bs-target="#myModal03">
-        <div class="card-body text-center">
-          <h4>Revision of noise</h4>
+      <!-- Modal -->
+      <div class="modal fade" id="modal{{ auxLanzObj.id }}" tabindex="-1" aria-labelledby="modalLabel{{ auxLanzObj.id }}Label" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title text-dark text-center" id="modalLabel{{ auxLanzObj.id }}">{{ auxLanzObj.nombreLanzamiento }}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p class="text-dark"><b>Tipo lanzamiento:</b> {{ auxLanzObj.tipoLanzamiento }}</p>
+              <p class="text-dark"><b>Nombre lanzamiento:</b> {{ auxLanzObj.nombreLanzamiento }}</p>
+              <p class="text-dark"><b>Artista:</b> {{ auxLanzObj.artista }}</p>
+              <p class="text-dark"><b>Fecha de lanzamiento:</b> {{ auxLanzObj.fechaLanzamiento }}</p>
+              <p class="text-dark"><b>Género:</b> {{ auxLanzObj.genero }}</p>
+              <p class="text-dark"><b>Descripción:</b> {{ auxLanzObj.descripcionLanzamiento }}</p>
+              <p class="text-dark"><b>Precio:</b> {{ auxLanzObj.precio }}</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/metro-album.jpeg' %}" alt="metro-album" style="max-width: 130px; max-height: 330px;" data-bs-toggle="modal" data-bs-target="#myModal04">
-        <div class="card-body text-center">
-          <h4> Heroes & Villains</h4>
-        </div>
-      </div>
-    </div>
-      
-  </div>
+    {% endfor %}
 </section>
-<!-- Segunda sección de artistas -->
-<section class="mb-5" id="artistas">
-  <div class="row justify-content-center">
-    <div class=" text-center pt-0 pb-5">
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-12 align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/NapalmDeath-album.jpg' %}" alt="NapalmDeath-album" style="max-width: 130px; max-height: 130px;" data-bs-toggle="modal" data-bs-target="#myModal11">
-        <div class="card-body text-center">
-          <h4>Apex Predator - Easy Meat
-        </h4>
-        </div> 
-      </div>
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/insectwarfare-album.jpg' %}" alt="insectwarfare-album" style="max-width: 130px; max-height: 130px;"data-bs-toggle="modal" data-bs-target="#myModal12">
-        <div class="card-body text-center">
-          <h4>Entomological Siege</h4>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/future-album.jpeg' %}" alt="future-album" style="max-width: 130px; max-height: 130px;"data-bs-toggle="modal" data-bs-target="#myModal13">
-        <div class="card-body text-center">
-          <h4>I Never Liked You</h4>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/morale-album.jpeg' %}" alt="morale-album" style="max-width: 130px; max-height: 130px;"data-bs-toggle="modal" data-bs-target="#myModal14">
-        <div class="card-body text-center">
-          <h4>Mr Morale and the big steppers</h4>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Tercera sección de artistas -->
-<section class="mb-5" id="artistas">
-  <div class="row justify-content-center">
-    <div class=" text-center pt-0 pb-5">
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-12 align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/yovng-album.jpeg' %}" alt="yovng-album" style="max-width: 130px; max-height: 130px;" data-bs-toggle="modal" data-bs-target="#myModal21">
-        <div class="card-body text-center">
-          <h4>WLGS</h4>
-        </div> 
-      </div>
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/don-album.jpeg' %}" alt="don-album" style="max-width: 130px; max-height: 130px;" data-bs-toggle="modal" data-bs-target="#myModal22">
-        <div class="card-body text-center">
-          <h4>LoveSick</h4>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/future-album2.jpeg' %}" alt="future-album2" style="max-width: 130px; max-height: 130px;" data-bs-toggle="modal" data-bs-target="#myModal23">
-        <div class="card-body text-center">
-          <h4>FUTURE</h4>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-2 col-sm-12">
-      <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-        <img class="card-img-top" src="{% static 'core/img/heaven-album.jpeg' %}" alt="heaven-album" style="max-width: 130px; max-height: 130px;" data-bs-toggle="modal" data-bs-target="#myModal24">
-        <div class="card-body text-center">
-          <h4>Heaven or Hell</h4>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-</div>
-<!-- Fin container de las cartas -->
-
-
-    
-
-<style> 
-  .egg-link {
-    color: white;
-  }
-</style>
-
-<div class="container mt-5">
-  <a href="/egg.html" class="egg-link">EGG</a>
-</div>
-
-
-
-
-<!-- Footer -->
-<footer class="footer">
-  <div class="container-fluid">
-    <p class="mb-0" style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">GRUPO CERO</p>
-    <p style="font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;">TODOS LOS DERECHOS RESERVADOS @ 2024</p>
-    <button type="button" class="btn btn-outline-light btn-contacto" data-bs-toggle="modal" data-bs-target="#formularioContacto">Contacto</button>
-  </div>
-</footer>
-<!-- Fin del footer -->
-
 
 <!-- Latest compiled JavaScript -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

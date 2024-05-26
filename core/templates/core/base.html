@@ -32,7 +32,10 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'loginmiembros' %}">Miembro</a>
-        </li>        
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'loginadmins' %}">Admin</a>
+        </li>          
       {% else %}
         <li class="nav-item">
           <a class="nav-link text-center" href="#">Bienvenido, {{ user.username }}</a>
