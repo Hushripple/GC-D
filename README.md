@@ -1,4 +1,4 @@
-Index:
+- Index:
 	Mostrar invitado: Listo ////////////////
 	Login y register de clientes: Listo ///////////////
 	Login de miembros: Listo /////////////////
@@ -7,11 +7,11 @@ Index:
 	Mostrar información real de la base de datos (lanzamientos, artistas, etc): Listo ///////////////////
 	Botones de lanzamiento y artistas llevan a la página existente: Listo ///////////////
 	
-Lanzamientos:
+- Lanzamientos:
 	Mostrar todos los lanzamientos que existen en la base de datos: Listo /////////////
 	Al hacerles click debe aparecer información adicional: Listo ////////////
 	
-Artistas:
+- Artistas:
 	Mostrar todos los artistas que existen en la base de datos: Listo ////////////
 	Al hacerles click debe aparecer la información del artista: Listo /////////////////
 
