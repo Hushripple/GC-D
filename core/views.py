@@ -19,14 +19,14 @@ def index (request):
 
 def artistas (request):
     auxArtObj = {
-        'listaArtObj' : Artista.objects.all()
+        'listaArtObj' : Artista.objects.filter(aprobado='aprobado')
     }
 
     return render(request, 'core/artistas.html', auxArtObj)
 
 def lanzamientos (request):
     auxLanzObj = {
-        'listaLanzObj' : Lanzamiento.objects.all()
+        'listaLanzObj' : Lanzamiento.objects.filter(aprobado='aprobado')
     }
 
     return render(request, 'core/lanzamientos.html', auxLanzObj)
@@ -77,6 +77,7 @@ def adminSolicitudesLanzamientos (request):
 
 def adminSolicitudesTipoLanzamientos (request):
     id = request.GET.get('id')
+    print(id)
     tipolanzamiento = TipoLanzamiento.objects.filter(id=id).first()
     context = {
         'TipoLanzamiento' : tipolanzamiento
@@ -101,20 +102,24 @@ def adminsaprobar (request):
 
         match tipo:
             case 'artista':
+                print(request.POST)
                 artista = Artista.objects.filter(id=id).first()
                 artista.aprobado = estado
                 artista.feedback = feedback
                 artista.save()
             case 'lanzamiento':
+                print(request.POST)
                 lanzamiento = Lanzamiento.objects.filter(id=id).first()
                 lanzamiento.aprobado = estado
                 lanzamiento.feedback = feedback
                 lanzamiento.save()
             case 'genero':
+                print(request.POST)
                 genero = GeneroMusical.objects.filter(id=id).first()    
                 genero.aprobado = estado
                 genero.save()
-            case 'tipolanzamiento':
+            case 'TipoLanzamiento':
+                print(request.POST)
                 tipolanzamiento = TipoLanzamiento.objects.filter(id=id).first()
                 tipolanzamiento.aprobado = estado
                 tipolanzamiento.feedback = feedback

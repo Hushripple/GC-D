@@ -70,7 +70,7 @@
                         <td>{{ auxLanzObj.fechaLanzamiento }}</td>
                         <td>{{ auxLanzObj.genero }}</td>
                         <td>{{ auxLanzObj.descripcionLanzamiento|truncatechars:50 }}</td>
-                        <td>{{ auxLanzObj.precio }}</td>
+                        <td>{{ auxLanzObj.precio_clp }}</td>
                         {% if auxLanzObj.aprobado == 'aprobado' %}
                             <td><span class="badge bg-success">{{ auxLanzObj.aprobado }}</span></td>
                         {% elif auxLanzObj.aprobado == 'pendiente' %}
