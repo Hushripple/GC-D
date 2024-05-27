@@ -1,10 +1,21 @@
 from django.db import models
 from django import forms
 
+import datetime
+
 # Create your models here.
     
+TIPO_APROBACION = [
+    ('aprobado', 'Aprobado'),
+    ('pendiente', 'Pendiente'),
+    ('rechazado', 'Rechazado')
+]
+
+
 class TipoLanzamiento(models.Model):
     nombreTipo = models.CharField(max_length=20)
+    aprobado = models.CharField(max_length=20, choices=TIPO_APROBACION, default='pendiente')
+    fecha_solicitud = models.DateField(null=True, blank=True, default=datetime.date.today)  
 
     def __str__(self):
         return self.nombreTipo
@@ -18,6 +29,8 @@ class Artista(models.Model):
     fecha_nacimiento = models.DateField(null=True, blank=True)
     biografia = models.TextField()
     imagen = models.ImageField(upload_to='artistas/', null=False, blank=False)
+    aprobado = models.CharField(max_length=20, choices=TIPO_APROBACION, default='pendiente')
+    fecha_solicitud = models.DateField(null=True, blank=True, default=datetime.date.today)  
 
     def clean_imagen(self):
         imagen = self.cleaned_data.get('imagen')
@@ -34,6 +47,8 @@ class Artista(models.Model):
     
 class GeneroMusical(models.Model):
     nombreGenero = models.CharField(max_length=30)
+    aprobado = models.CharField(max_length=20, choices=TIPO_APROBACION, default='pendiente')
+    fecha_solicitud = models.DateField(null=True, blank=True, default=datetime.date.today)  
 
     def __str__(self):
         return self.nombreGenero
@@ -51,7 +66,8 @@ class Lanzamiento(models.Model):
     descripcionLanzamiento = models.TextField()
     precio = models.IntegerField(default=0)
     imagen = models.ImageField(upload_to='lanzamientos/', null=True, blank=True)
-
+    aprobado = models.CharField(max_length=20, choices=TIPO_APROBACION, default='pendiente')
+    fecha_solicitud = models.DateField(null=True, blank=True, default=datetime.date.today)  
     def __str__(self):
         return self.nombreLanzamiento
     
@@ -61,3 +77,6 @@ class Lanzamiento(models.Model):
     class Meta:
         verbose_name = "Lanzamiento"
         verbose_name_plural = "Lanzamientos"
+
+
+    

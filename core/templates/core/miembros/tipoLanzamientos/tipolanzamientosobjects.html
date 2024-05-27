@@ -49,6 +49,7 @@
                     <tr>
                         <th scope="col">ID tipo</th>
                         <th scope="col">Nombre tipo de lanzamiento</th>
+                        <th scope="col">Estado</th>
                         <th scope="col">Acciones</th>
                     </tr>
                 </thead>
@@ -57,6 +58,13 @@
                     <tr>
                         <td>{{ auxTipoObj.pk }}</td>
                         <td>{{ auxTipoObj.nombreTipo }}</td>
+                        {% if auxTipoObj.aprobado == 'aprobado' %}
+                            <td><span class="badge bg-success">{{ auxTipoObj.aprobado }}</span></td>
+                        {% elif auxTipoObj.aprobado == 'pendiente' %}
+                            <td><span class="badge bg-secondary">{{ auxTipoObj.aprobado }}</span></td>
+                        {% else %}
+                            <td><span class="badge bg-danger">{{ auxTipoObj.aprobado }}</span></td>
+                        {% endif %}
                         <td>
                             <a href="{% url 'tipolanzamientosupdate' auxTipoObj.pk %}" class="btn btn-dark me-2">Modificar</a>
                             <!-- Botón para abrir el modal -->

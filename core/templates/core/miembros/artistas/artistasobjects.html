@@ -51,6 +51,7 @@
                         <th scope="col">Nombre artista</th>
                         <th scope="col">Fecha de nacimiento</th>
                         <th scope="col">Biografía</th>
+                        <th scope="col">Estado</th>
                         <th scope="col">Imagen</th>
                         <th scope="col">Acciones</th>
                     </tr>
@@ -61,7 +62,14 @@
                         <td>{{ auxArtObj.pk }}</td>
                         <td>{{ auxArtObj.nombreArtista }}</td>
                         <td>{{ auxArtObj.fecha_nacimiento }}</td>
-                        <td>{{ auxArtObj.biografia }}</td>
+                        <td>{{ auxArtObj.biografia|truncatechars:50 }}</td>
+                        {% if auxArtObj.aprobado == 'aprobado' %}
+                            <td><span class="badge bg-success">{{ auxArtObj.aprobado }}</span></td>
+                        {% elif auxArtObj.aprobado == 'pendiente' %}
+                            <td><span class="badge bg-secondary">{{ auxArtObj.aprobado }}</span></td>
+                        {% else %}
+                            <td><span class="badge bg-danger">{{ auxArtObj.aprobado }}</span></td>
+                        {% endif %}
                         <td>
                             {% if auxArtObj.imagen %}
                                 <a href="#" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modalImagen{{ auxArtObj.pk }}">Imagen</a>

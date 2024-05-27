@@ -292,7 +292,7 @@
     <div class="card text-center border-0">
       <div class="card-body">
         <h5 class="card-title">Productos ingresados por el usuario</h5>
-        <p class="card-text">Cantidad: <span class="badge bg-dark" id="contador-productos">0</span></p>
+        <p class="card-text">Cantidad: <span class="badge bg-dark" id="contador-productos">{0}</span></p>
       </div>
     </div>
   </div>
@@ -306,65 +306,17 @@
         <a href="{% url 'lanzamientos' %}"><button class="btn btn-dark" type="button">Ver todo</button></a>
         
       </div>
-      <div class="col-md-2 col-sm-12">
-        <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-          <img class="card-img-top" src="{% static 'core/img/longhena.jpg' %}" alt="Longhena" style="max-width: 230px; max-height: 230px;">
-          <div class="card-body text-center">
-            <h4>Gridlink - Longhena</h4>
-            <p>Género: Grindcore/Mathgrind</p>
+      {% for lanzamiento in listaLanzamientos %}
+        <div class="col-md-2 col-sm-12">
+          <div class="card h-100 border-0 mx-auto align-items-center mb-5">
+            <img class="card-img-top" src="{{lanzamiento.imagen.url}}" alt="{{lanzamiento.nombre}}" style="max-width: 230px; max-height: 230px;">
+            <div class="card-body text-center">
+              <h4>{{lanzamiento.nombreLanzamiento}}</h4>
+              <p>Género: {{ lanzamiento.genero}}</p>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="col-md-2 col-sm-12">
-        <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-          <img class="card-img-top" src="{% static 'core/img/d-clone.jpg' %}" alt="D-Clone" style="max-width: 230px; max-height: 230px;">
-          <div class="card-body text-center">
-            <h4>D-Clone - Creation and Destroy</h4>
-            <p>Género: Japanese Hardcore/D-Beat</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-2 col-sm-12">
-        <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-          <img class="card-img-top" src="{% static 'core/img/tranquilizer.jpg' %}" alt="Tranquilizer" style="max-width: 230px; max-height: 230px;">
-          <div class="card-body text-center">
-            <h4>Tranquilizer - Tranquilizer</h4>
-            <p>Género: Japanese Hardcore/Noisecore</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <!-- Segunda sección de lanzamientos -->
-  <section class="mb-5" id="lanzamientos2">
-    <div class="row justify-content-center">
-      <div class="col-md-2 col-sm-12">
-        <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-          <img class="card-img-top" src="{% static 'core/img/dropdead.jpg' %}" alt="Dropdead" style="max-width: 230px; max-height: 230px;">
-          <div class="card-body text-center">
-            <h4>Dropdead - 落とす死</h4>
-            <p>Género: Thrashcore/Powerviolence</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-2 col-sm-12">
-        <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-          <img class="card-img-top" src="{% static 'core/img/siege.jpg' %}" alt="Siege" style="max-width: 230px; max-height: 230px;">
-          <div class="card-body text-center">
-            <h4>Siege - Drop Dead</h4>
-            <p>Género: Thrashcore/Powerviolence</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-2 col-sm-12">
-        <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-          <img class="card-img-top" src="{% static 'core/img/disclose.jpg' %}" alt="Disclose" style="max-width: 230px; max-height: 230px;">
-          <div class="card-body text-center">
-            <h4>Disclose - Yesterday's Fairytale, Tomorrow's Nightmare</h4>
-            <p>Género: D-Beat/Japanese Hardcore</p>
-          </div>
-        </div>
-      </div>
+      {% endfor %}
     </div>
   </section>
   <!-- Fin cards para productos -->
@@ -376,61 +328,20 @@
       <div class=" text-center pt-0 pb-5">
         <a href="{% url 'artistas' %}"><button class="btn btn-dark" type="button"">Ver todo</button></a>
       </div>
-      <div class="col-md-2 col-sm-12">
-        <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-          <img class="card-img-top" src="{% static 'core/img/gridlink-band.jpg' %}" alt="Gridlink-band" style="max-width: 230px; max-height: 230px;">
-          <div class="card-body text-center">
-            <h4>Gridlink</h4>
-          </div> 
-        </div>
-      </div>
-      <div class="col-md-2 col-sm-12">
-        <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-          <img class="card-img-top" src="{% static 'core/img/discordance-band.jpg' %}" alt="Discordance-band" style="max-width: 230px; max-height: 230px;">
-          <div class="card-body text-center">
-            <h4>Discordance Axis</h4>
+
+      {% for artista in listaArtistas %}
+        <div class="col-md-2 col-sm-12">
+          <div class="card h-100 border-0 mx-auto align-items-center mb-5">
+            <img class="card-img-top" src="{{artista.imagen.url}}" alt="{{artista.nombre}}" style="max-width: 230px; max-height: 230px;">
+            <div class="card-body text-center">
+              <h4>{{artista.nombreArtista}}</h4>
+            </div> 
           </div>
         </div>
-      </div>
-      <div class="col-md-2 col-sm-12">
-        <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-          <img class="card-img-top" src="{% static 'core/img/wormrot-band.jpg' %}" alt="Wormrot-band" style="max-width: 230px; max-height: 230px;">
-          <div class="card-body text-center">
-            <h4>Wormrot</h4>
-          </div>
-        </div>
-      </div>
+      {% endfor %}
     </div>
   </section>
   <!-- Segunda sección de artistas -->
-  <section class="mb-5" id="artistas2">
-    <div class="row justify-content-center">
-      <div class="col-md-2 col-sm-12">
-        <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-          <img class="card-img-top" src="{% static 'core/img/d-clone-band.jpg' %}" alt="D-Clone-Band" style="max-width: 230px; max-height: 230px;">
-          <div class="card-body text-center">
-            <h4>D-Clone</h4>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-2 col-sm-12">
-        <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-          <img class="card-img-top" src="{% static 'core/img/tranquilizer-band.jpg' %}" alt="Tranquilizer-band" style="max-width: 192px; max-height: 192px;">
-          <div class="card-body text-center">
-            <h4>Tranquilizer</h4>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-2 col-sm-12">
-        <div class="card h-100 border-0 mx-auto align-items-center mb-5">
-          <img class="card-img-top" src="{% static 'core/img/dropdead-band.jpg' %}" alt="Dropdead-band" style="max-width: 230px; max-height: 230px;">
-          <div class="card-body text-center">
-            <h4>Dropdead</h4>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
   <!-- Fin cards para artistas -->
 </div>
 

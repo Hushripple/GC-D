@@ -49,6 +49,7 @@
                     <tr>
                         <th scope="col">ID género</th>
                         <th scope="col">Nombre género</th>
+                        <th scope="col">Estado</th>
                         <th scope="col">Acciones</th>
                     </tr>
                 </thead>
@@ -57,6 +58,13 @@
                     <tr>
                         <td>{{ auxGenObj.pk }}</td>
                         <td>{{ auxGenObj.nombreGenero }}</td>
+                        {% if auxGenObj.aprobado == 'aprobado' %}
+                            <td><span class="badge bg-success">{{ auxGenObj.aprobado }}</span></td>
+                        {% elif auxGenObj.aprobado == 'pendiente' %}
+                            <td><span class="badge bg-secondary">{{ auxGenObj.aprobado }}</span></td>
+                        {% else %}
+                            <td><span class="badge bg-danger">{{ auxGenObj.aprobado }}</span></td>
+                        {% endif %}
                         <td>
                             <a href="{% url 'generosupdate' auxGenObj.pk %}" class="btn btn-dark me-2">Modificar</a>
                             <!-- Botón para abrir el modal -->

@@ -6,11 +6,16 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, Group
 from django.urls import reverse
+from django.core.serializers import serialize
 
 # Create your views here.
 def index (request):
-    
-    return render(request, 'core/index.html')
+    context = {
+        'listaArtistas' : Artista.objects.filter(aprobado='aprobado')[:4],
+        'listaLanzamientos' : Lanzamiento.objects.filter(aprobado='aprobado')[:4]
+    }
+
+    return render(request, 'core/index.html', context)
 
 def artistas (request):
     auxArtObj = {
@@ -38,9 +43,78 @@ def addtipolanzamientos (request):
 def addgeneros (request):
     return render(request, 'core/miembros/generos/crud/add.html')
 
-def adminsindex (request):
-    return render(request, 'core/admins/adminsIndex.html')
+def adminsindex (request): 
+    context = {
+        'solicitudes' : Artista.objects.filter(aprobado='pendiente').values('id', 'fecha_solicitud', 'nombreArtista', 'aprobado'),
+    }
+    return render(request, 'core/admins/adminsIndex.html', context)
 
+def adminSolicitudes (request):
+    context = {
+        'Artistas' : Artista.objects.filter(aprobado='pendiente'),
+        'Lanzamientos' : Lanzamiento.objects.filter(aprobado='pendiente'),
+        'Generos' : GeneroMusical.objects.filter(aprobado='pendiente'),
+        'TiposLanzamientos' : TipoLanzamiento.objects.filter(aprobado='pendiente')
+    }
+    
+    return render(request, 'core/admins/adminsSolicitudes.html', context)
+
+def adminSolicitudesArtistas (request):
+    id = request.GET.get('id')
+    artista = Artista.objects.filter(id=id).first()
+    context = {
+        'Artista' : artista
+    }
+    return render(request, 'core/admins/adminsSolicitudesArtistas.html', context)
+
+def adminSolicitudesLanzamientos (request):
+    id = request.GET.get('id')
+    lanzamiento = Lanzamiento.objects.filter(id=id).first()
+    context = {
+        'Lanzamiento' : lanzamiento
+    }
+    return render(request, 'core/admins/adminsSolicitudesLanzamientos.html', context)
+
+def adminSolicitudesTipoLanzamientos (request):
+    id = request.GET.get('id')
+    tipolanzamiento = TipoLanzamiento.objects.filter(id=id).first()
+    context = {
+        'TipoLanzamiento' : tipolanzamiento
+    }
+    return render(request, 'core/admins/adminsSolicitudesTipoLanzamientos.html', context)
+
+def adminSolicitudesGeneros (request):
+    id = request.GET.get('id')
+    genero = GeneroMusical.objects.filter(id=id).first()
+    context = {
+        'Genero' : genero
+    }
+    return render(request, 'core/admins/adminsSolicitudesGeneros.html', context)
+
+def adminsaprobar (request):
+    id = request.GET.get('id')
+    tipo = request.GET.get('tipo')
+    estado = request.GET.get('estado')
+
+    match tipo:
+        case 'artista':
+            artista = Artista.objects.filter(id=id).first()
+            artista.aprobado = estado
+            artista.save()
+        case 'lanzamiento':
+            lanzamiento = Lanzamiento.objects.filter(id=id).first()
+            lanzamiento.aprobado = estado
+            lanzamiento.save()
+        case 'genero':
+            genero = GeneroMusical.objects.filter(id=id).first()    
+            genero.aprobado = estado
+            genero.save()
+        case 'tipolanzamiento':
+            tipolanzamiento = TipoLanzamiento.objects.filter(id=id).first()
+            tipolanzamiento.aprobado = estado
+            tipolanzamiento.save()
+  
+    return redirect('adminsolicitudes')
 def loginadmins (request):
     return render(request, 'core/admins/loginAdmins.html')
 
@@ -170,6 +244,7 @@ def tipolanzamientosadd(request):
 
     if request.method == 'POST':
         formulario = TipoLanzamientoForm(request.POST)
+        print(formulario.is_valid())
         if formulario.is_valid():
             formulario.save()
             aux['msj'] = "Tipo lanzamiento guardado correctamente!"
