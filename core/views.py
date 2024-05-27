@@ -92,29 +92,37 @@ def adminSolicitudesGeneros (request):
     return render(request, 'core/admins/adminsSolicitudesGeneros.html', context)
 
 def adminsaprobar (request):
-    id = request.GET.get('id')
-    tipo = request.GET.get('tipo')
-    estado = request.GET.get('estado')
+    if request.method == 'POST':
+        print(request.POST)
+        id = request.POST.get('id')
+        tipo = request.POST.get('tipo')
+        estado = request.POST.get('aprobado')
+        feedback = request.POST.get('feedback')
 
-    match tipo:
-        case 'artista':
-            artista = Artista.objects.filter(id=id).first()
-            artista.aprobado = estado
-            artista.save()
-        case 'lanzamiento':
-            lanzamiento = Lanzamiento.objects.filter(id=id).first()
-            lanzamiento.aprobado = estado
-            lanzamiento.save()
-        case 'genero':
-            genero = GeneroMusical.objects.filter(id=id).first()    
-            genero.aprobado = estado
-            genero.save()
-        case 'tipolanzamiento':
-            tipolanzamiento = TipoLanzamiento.objects.filter(id=id).first()
-            tipolanzamiento.aprobado = estado
-            tipolanzamiento.save()
-  
-    return redirect('adminsolicitudes')
+        match tipo:
+            case 'artista':
+                artista = Artista.objects.filter(id=id).first()
+                artista.aprobado = estado
+                artista.feedback = feedback
+                artista.save()
+            case 'lanzamiento':
+                lanzamiento = Lanzamiento.objects.filter(id=id).first()
+                lanzamiento.aprobado = estado
+                lanzamiento.feedback = feedback
+                lanzamiento.save()
+            case 'genero':
+                genero = GeneroMusical.objects.filter(id=id).first()    
+                genero.aprobado = estado
+                genero.save()
+            case 'tipolanzamiento':
+                tipolanzamiento = TipoLanzamiento.objects.filter(id=id).first()
+                tipolanzamiento.aprobado = estado
+                tipolanzamiento.feedback = feedback
+                tipolanzamiento.save()
+
+        return redirect('adminsolicitudes')
+    return render(request, 'index')
+
 def loginadmins (request):
     return render(request, 'core/admins/loginAdmins.html')
 

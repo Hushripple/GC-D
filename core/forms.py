@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 class LanzamientoForm (ModelForm):
     class Meta:
         model = Lanzamiento
-        fields = ['tipoLanzamiento', 'nombreLanzamiento', 'artista', 'fechaLanzamiento', 'genero', 'descripcionLanzamiento','precio', 'imagen']
+        fields = ['tipoLanzamiento', 'nombreLanzamiento', 'artista', 'fechaLanzamiento', 'genero', 'descripcionLanzamiento','precio']
         widgets = {
             'tipoLanzamiento': forms.Select(attrs={'class': 'form-control'}),
             'nombreLanzamiento': forms.TextInput(attrs={'class': 'form-control'}),
@@ -43,3 +43,23 @@ class ArtistaForm (ModelForm):
             'fecha_nacimiento': forms.DateInput(attrs={'class': 'form-control', 'id': 'id_fecha_nacimiento', 'type': 'date'}),
             'biografia': forms.Textarea(attrs={'class': 'form-control', 'id': 'id_biografia', 'rows': 3}),
         }
+
+class ArtistaAprobacionForm(ModelForm):
+    class Meta:
+        model = Artista
+        fields = ['aprobado', 'feedback']
+
+class GeneroAprobacionForm(ModelForm):
+    class Meta:
+        model = GeneroMusical
+        fields = ['aprobado', 'feedback']
+
+class LanzamientoAprobacionForm(ModelForm):
+    class Meta:
+        model = Lanzamiento
+        fields = ['aprobado', 'feedback']
+
+class TipoLanzamientoAprobacionForm(ModelForm):
+    class Meta:
+        model = TipoLanzamiento
+        fields = ['aprobado', 'feedback']

@@ -16,6 +16,7 @@ class TipoLanzamiento(models.Model):
     nombreTipo = models.CharField(max_length=20)
     aprobado = models.CharField(max_length=20, choices=TIPO_APROBACION, default='pendiente')
     fecha_solicitud = models.DateField(null=True, blank=True, default=datetime.date.today)  
+    feedback = models.TextField(blank=True)
 
     def __str__(self):
         return self.nombreTipo
@@ -30,7 +31,8 @@ class Artista(models.Model):
     biografia = models.TextField()
     imagen = models.ImageField(upload_to='artistas/', null=False, blank=False)
     aprobado = models.CharField(max_length=20, choices=TIPO_APROBACION, default='pendiente')
-    fecha_solicitud = models.DateField(null=True, blank=True, default=datetime.date.today)  
+    fecha_solicitud = models.DateField(null=True, blank=True, default=datetime.date.today)
+    feedback = models.TextField(blank=True)
 
     def clean_imagen(self):
         imagen = self.cleaned_data.get('imagen')
@@ -49,6 +51,7 @@ class GeneroMusical(models.Model):
     nombreGenero = models.CharField(max_length=30)
     aprobado = models.CharField(max_length=20, choices=TIPO_APROBACION, default='pendiente')
     fecha_solicitud = models.DateField(null=True, blank=True, default=datetime.date.today)  
+    feedback = models.TextField(blank=True)
 
     def __str__(self):
         return self.nombreGenero
@@ -68,6 +71,8 @@ class Lanzamiento(models.Model):
     imagen = models.ImageField(upload_to='lanzamientos/', null=True, blank=True)
     aprobado = models.CharField(max_length=20, choices=TIPO_APROBACION, default='pendiente')
     fecha_solicitud = models.DateField(null=True, blank=True, default=datetime.date.today)  
+    feedback = models.TextField(blank=True)
+
     def __str__(self):
         return self.nombreLanzamiento
     

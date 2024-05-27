@@ -18,7 +18,7 @@
 <!-- Inicio menú de admin con logo -->
 <nav class="navbar navbar-expand-sm bg-light navbar-light justify-content-center">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{% url 'miembrosindex' %}">
+        <a class="navbar-brand" href="{% url 'adminsindex' %}">
             <img src="{% static 'core/img/LOGO.png' %}" alt="Avatar Logo" style="width:200px;" class="rounded-pill"> 
         </a>
     </div>
@@ -37,6 +37,10 @@
 </nav>
 <div class="container mt-5 text-center">
     <div class="container">
+        <form id="artistaAprobacionForm" action="{% url 'adminsaprobar' %}" method="POST">
+            <input type="hidden" name="tipo" value="genero">
+            <input type="hidden" name="id" value="{{Genero.id}}">
+            {% csrf_token %}
         <table class="table">
             <tbody>
                 <tr>
@@ -48,13 +52,31 @@
                     <td><span id="fechaSolicitud">{{ Genero.fecha_solicitud }}</span></td>
                 </tr>
                 <tr>
-                    <td colspan="2"> 
-                        <a href="{% url 'adminsaprobar' %}?id={{ Genero.id }}&estado=aprobado&tipo=genero" class="btn btn-success">Aprobar</a>
-                        <a href="{% url 'adminsaprobar' %}?id={{ Genero.id }}&estado=rechazado&tipo=genero" class="btn btn-danger">Rechazar</a>
-                    </td>    
+                    <th>Justificación:</th>
+                    <td>
+                        <textarea id="feedback" name="feedback" class="form-control" rows="3"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Estado</th>
+                    <td>
+                        <select id="aprobado" name="aprobado" class="form-select">
+                            <option value="aprobado">Aprobar</option>
+                            <option value="rechazado">Rechazar</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button class="btn btn-primary" type="submit">Enviar</button>
+                        <a href="{% url 'adminsolicitudes' %}">
+                            <button class="btn btn-secondary" type="button">Cancelar</button>
+                        </a>
+                    </td>  
                 </tr>
             </tbody>
         </table>
+        </form>
        
     </div>
 </div>

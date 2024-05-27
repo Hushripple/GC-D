@@ -81,7 +81,7 @@
               <img src="{% static 'core/img/lanzamientos.jpg' %}" class="card-img-top" alt="cuentasMiembro">
               <div class="card-body">
                   <h5 class="card-title">Crear cuenta de miembro</h5>
-                  <a href="#" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#registroModal">Crear</a>
+                  <a href="{% url 'registermiembro' %}" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#registroModal">Crear</a>
               </div>
           </div>
       </div>
@@ -94,6 +94,39 @@
             </div>
         </div>
     </div>
+
+<!-- Inicio modals para registro e inicio de sesión -->
+<div class="modal fade" id="registroModal" tabindex="-1" aria-labelledby="registroModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="registroModalLabel" style="color:black">Registro de miembros</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <!-- Formulario de registro -->
+          <div class="modal-body">
+            <form method="POST" action="{% url 'registermiembro' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="emailRegistro" class="form-label" style="color:black">Email</label>
+                    <input type="email" class="form-control" id="txtEmail" name="email" placeholder="Introduce un email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="nombreRegistro" class="form-label" style="color:black">Nombre de usuario</label>
+                    <input type="text" class="form-control" id="txtUsuario" name="username" placeholder="Introduce un nombre de usuario" required>
+                </div>
+                <div class="mb-3">
+                    <label for="passwordRegistro" class="form-label" style="color:black">Contraseña</label>
+                    <input type="password" class="form-control" id="txtPassword" name="password" placeholder="Introduce una contraseña" required>
+                </div>
+                <div class="mb-3">
+                    <label for="passwordRepetirRegistro" class="form-label" style="color:black">Confirmar contraseña</label>
+                    <input type="password" class="form-control" id="txtPasswordConfirmation" name="password_confirmation" placeholder="Vuelva a introducir contraseña" required>
+                </div>
+                <button type="submit" class="btn btn-dark">Registrar miembro</button>
+            </form>
+          </div>
+        <!-- Fin formulario registro -->
 
 <!-- Latest compiled JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
