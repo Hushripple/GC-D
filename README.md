@@ -19,6 +19,8 @@
 
 GC-D es un proyecto institucional enfocado en la confección de una página web funcional con temática de galería musical utilizando Django.
 
+Este proyecto está lejos de ser perfecto, pero se aprendió bastante en su realización.
+
 ## Características
 
 - Página de clientes e invitados
