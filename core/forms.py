@@ -22,6 +22,9 @@ class LanzamientoForm (ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['artista'].queryset = Artista.objects.filter(aprobado='aprobado')
+        self.fields['genero'].queryset = GeneroMusical.objects.filter(aprobado='aprobado')
+        self.fields['tipoLanzamiento'].queryset = TipoLanzamiento.objects.filter(aprobado='aprobado')
+
         
 class TipoLanzamientoForm (ModelForm):
     class Meta:

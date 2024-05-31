@@ -126,7 +126,7 @@ def adminsaprobar (request):
                 tipolanzamiento.save()
 
         return redirect('adminsolicitudes')
-    return render(request, 'index')
+    return render(request, 'adminsolicitudes')
 
 def loginadmins (request):
     return render(request, 'core/admins/loginAdmins.html')

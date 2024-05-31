@@ -37,6 +37,10 @@
 </nav>
 <div class="container mt-5 text-center">
     <div class="container">
+        <form id="artistaAprobacionForm" action="{% url 'adminsaprobar' %}" method="POST">
+            <input type="hidden" name="tipo" value="artista">
+            <input type="hidden" name="id" value="{{Artista.id}}">
+            {% csrf_token %}
         <table class="table">
             <tbody>
                 <tr>
@@ -60,15 +64,31 @@
                     <td><span id="fechaSolicitud">{{ Artista.fecha_solicitud }}</span></td>
                 </tr>
                 <tr>
-                    <th>
-                    </th> 
-                    <td> 
-                        <a href="{% url 'adminsaprobar' %}?id={{ Artista.id }}&estado=aprobado&tipo=artista" class="btn btn-success">Aprobar</a>
-                        <a href="{% url 'adminsaprobar' %}?id={{ Artista.id }}&estado=rechazado&tipo=artista" class="btn btn-danger">Rechazar</a>
-                    </td>    
+                    <th>Estado</th>
+                    <td>
+                        <select id="aprobado" name="aprobado" class="form-select">
+                            <option value="aprobado">Aprobar</option>
+                            <option value="rechazado">Rechazar</option>
+                        </select>
+                    </td>
+                    <tr>
+                        <th>Justificación:</th>
+                        <td>
+                            <textarea id="feedback" name="feedback" class="form-control" rows="3"></textarea>
+                        </td>
+                    </tr>   
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <button class="btn btn-primary" type="submit">Enviar</button>
+                        <a href="{% url 'adminsolicitudes' %}">
+                            <button class="btn btn-secondary" type="button">Cancelar</button>
+                        </a>
+                    </td>  
                 </tr>
             </tbody>
         </table>
+        </form>   
     </div>
 </div>
 

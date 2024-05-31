@@ -75,53 +75,51 @@
                             <td><span class="badge bg-success">{{ auxLanzObj.aprobado }}</span></td>
                         {% elif auxLanzObj.aprobado == 'pendiente' %}
                             <td><span class="badge bg-secondary">{{ auxLanzObj.aprobado }}</span></td>
-                            {% else %}
+                        {% else %}
                             <!-- Modal para mostrar el feedback -->
-                               <div class="modal fade" id="feedbackModal{{ auxArtObj.pk }}" tabindex="-1" aria-labelledby="feedbackModalLabel{{ auxArtObj.pk }}" aria-hidden="true">
-                                   <div class="modal-dialog">
-                                       <div class="modal-content">
-                                           <div class="modal-header">
-                                               <h5 class="modal-title" id="feedbackModalLabel{{ auxArtObj.pk }}"><p class="text-dark">Feedback</p></h5>
-                                               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                           </div>
-                                           <div class="modal-body">
-                                               <p class="text-dark">{{ auxArtObj.feedback }}</p>
-                                           </div>
-                                           <div class="modal-footer">
-                                               <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
-                                           </div>
-                                       </div>
-                                   </div>
-                               </div>
-   
-                               <td><span class="badge bg-danger" data-bs-toggle="modal" data-bs-target="#feedbackModal{{ auxArtObj.pk }}" data-bs-placement="top" title="{{ auxArtObj.feedback }}">{{ auxArtObj.aprobado }}</span></td>
-                           {% endif %}
-                            <td> 
-                                {% if auxLanzObj.imagen %}
-                                <a href="#" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modalImagen{{ auxLanzObj.pk }}">Imagen</a>
-                                <!-- Modal de imagen -->
-                                    <div class="modal fade" id="modalImagen{{ auxLanzObj.pk }}" tabindex="-1" aria-labelledby="modalImagenLabel{{ auxLanzObj.pk }}" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="modalImagenLabel{{ auxLanzObj.pk }}"><p class="text-dark">Imagen</p></h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <img src="{{ auxLanzObj.imagen.url }}" alt="" style="max-width: 100%;">
-                                                </div>
-                                            </div>
+                            <div class="modal fade" id="feedbackModal{{ auxLanzObj.pk }}" tabindex="-1" aria-labelledby="feedbackModalLabel{{ auxLanzObj.pk }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="feedbackModalLabel{{ auxLanzObj.pk }}"><p class="text-dark">Feedback</p></h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="text-dark">{{ auxLanzObj.feedback }}</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <td><span class="badge bg-danger" data-bs-toggle="modal" data-bs-target="#feedbackModal{{ auxLanzObj.pk }}" data-bs-placement="top" title="{{ auxLanzObj.feedback }}">{{ auxLanzObj.aprobado }}</span></td>
+                        {% endif %}
+                        <td> 
+                            {% if auxLanzObj.imagen %}
+                            <a href="#" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modalImagen{{ auxLanzObj.pk }}">Imagen</a>
+                            <!-- Modal de imagen -->
+                            <div class="modal fade" id="modalImagen{{ auxLanzObj.pk }}" tabindex="-1" aria-labelledby="modalImagenLabel{{ auxLanzObj.pk }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="modalImagenLabel{{ auxLanzObj.pk }}"><p class="text-dark">Imagen</p></h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <img src="{{ auxLanzObj.imagen.url }}" alt="" style="max-width: 100%;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             {% endif %}
-                            </td>
-                        
-                        <td><a href="{% url 'lanzamientosupdate' auxLanzObj.pk %}" class="btn btn-dark me-2">Modificar</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'lanzamientosupdate' auxLanzObj.pk %}" class="btn btn-dark me-2">Modificar</a>
                             <!-- Botón para abrir el modal -->
                             <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#confirmModal{{ auxLanzObj.pk }}">
                                 Eliminar
-                            </button></td>
-
+                            </button>
                             <!-- Modal de confirmación -->
                             <div class="modal fade" id="confirmModal{{ auxLanzObj.pk }}" tabindex="-1" aria-labelledby="confirmModalLabel{{ auxLanzObj.pk }}" aria-hidden="true">
                                 <div class="modal-dialog">

@@ -64,25 +64,25 @@
                             <td><span class="badge bg-secondary">{{ auxGenObj.aprobado }}</span></td>
                         {% else %}
                         <!-- Modal para mostrar el feedback -->
-                           <div class="modal fade" id="feedbackModal{{ auxArtObj.pk }}" tabindex="-1" aria-labelledby="feedbackModalLabel{{ auxArtObj.pk }}" aria-hidden="true">
-                               <div class="modal-dialog">
-                                   <div class="modal-content">
-                                       <div class="modal-header">
-                                           <h5 class="modal-title" id="feedbackModalLabel{{ auxArtObj.pk }}"><p class="text-dark">Feedback</p></h5>
-                                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                       </div>
-                                       <div class="modal-body">
-                                           <p class="text-dark">{{ auxArtObj.feedback }}</p>
-                                       </div>
-                                       <div class="modal-footer">
-                                           <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
-                                       </div>
-                                   </div>
-                               </div>
-                           </div>
+                        <div class="modal fade" id="feedbackModal{{ auxGenObj.pk }}" tabindex="-1" aria-labelledby="feedbackModalLabel{{ auxGenObj.pk }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="feedbackModalLabel{{ auxGenObj.pk }}"><p class="text-dark">Feedback</p></h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p class="text-dark">{{ auxGenObj.feedback }}</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cerrar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                           <td><span class="badge bg-danger" data-bs-toggle="modal" data-bs-target="#feedbackModal{{ auxArtObj.pk }}" data-bs-placement="top" title="{{ auxArtObj.feedback }}">{{ auxArtObj.aprobado }}</span></td>
-                       {% endif %}
+                        <td><span class="badge bg-danger" data-bs-toggle="modal" data-bs-target="#feedbackModal{{ auxGenObj.pk }}" data-bs-placement="top" title="{{ auxGenObj.feedback }}">{{ auxGenObj.aprobado }}</span></td>
+                    {% endif %}
                         <td>
                             <a href="{% url 'generosupdate' auxGenObj.pk %}" class="btn btn-dark me-2">Modificar</a>
                             <!-- Botón para abrir el modal -->
