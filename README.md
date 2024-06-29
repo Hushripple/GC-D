@@ -8,24 +8,34 @@
 ## Tecnologías Utilizadas
 
 - ![Django](https://img.shields.io/badge/django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white)
+- ![DjangoREST](https://img.shields.io/badge/DJANGO-REST-ff1709?style=for-the-badge&logo=django&logoColor=white&color=ff1709&labelColor=gray)
 - ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
-- ![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)
+- ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
 - ![Bootstrap](https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white)
 - ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
 - ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
 - ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
+- ![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)
+
 
 ## Descripción
 
-GC-D es un proyecto institucional enfocado en la confección de una página web funcional con temática de galería musical utilizando Django.
+Grupo Cero - Final es la última versión de un proyecto institucional enfocado en la confección de una página web funcional con temática de galería musical utilizando Django.
 
-Este proyecto está lejos de ser perfecto, pero se aprendió bastante en su realización.
+A pesar de que existen pequeñas cosas que nos hubiese gustado modificar y optimizar, el proyecto se considera 100% terminado según el checklist.
 
-## Características
+Este repositorio es el repositorio público del proyecto, con todas las contraseñas y datos sensibles eliminados. El repositorio utilizado para el hosting en Vercel está en privado por obvias razones.
 
-- Página de clientes e invitados
-- Creación de cuentas de clientes y miembros
-- Páginas para poder visualizar los lanzamientos y los artistas aprobados como cliente/invitado
-- Páginas de miembro donde se pueden enviar las solicitudes de lanzamiento, artista, género musical y tipo de lanzamiento, además de poder gestionarlos
-- Páginas de administrador donde se pueden crear cuentas de miembros y gestionar las solicitudes del miembro
+## Características (Final)
 
+- REST Framework implementado
+- Utilzación de 2 APIS externas
+- Paginadores implementados
+- Captchas en los forms y en el admin implementados 
+- Admin confirm implementado
+- AXES implementado
+- Carrito de compras funcional
+- Método de pago PayPal implementado
+- Historial y Voucher de compra por usuario (descargable en PDF)
+- Módulo de recuperación contraseña
+- Proyecto hosteado en Vercel
